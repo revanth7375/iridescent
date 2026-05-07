@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IRIDESCENT — Bespoke Couture Boutique</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #f0eafa;
+      --warm-white: #faf8ff;
+      --charcoal: #1a1528;
+      --gold: #9b7fd4;
+      --gold-light: #d4b8f5;
+      --blush: #e0c8f5;
+      --deep: #1e1030;
+      --mid: #111111;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+      opacity: 0.6;
+    }
+
+    body:hover .cursor {
+      opacity: 1;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      background: rgba(250, 248, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(155, 127, 212, 0.2);
+      transition: padding 0.4s ease;
+    }
+
+    nav.scrolled {
+      padding: 16px 60px;
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-logo img {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-brand .nav-logo img {
+      height: 50px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-left: 14px;
+      padding-left: 14px;
+      border-left: 1px solid rgba(155, 127, 212, 0.5);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .nav-logo-text span {
+      color: var(--gold);
+    }
+
+    .footer-brand .nav-logo .nav-logo-text {
+      color: #111111;
+      border-left-color: rgba(155, 127, 212, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--charcoal);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 10px 28px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+      color: white;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      background: var(--deep);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 80px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(155, 127, 212, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--cream);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-subtitle {
+      font-size: 12px;
+      letter-spacing: 2px;
+      line-height: 2;
+      color: rgba(245, 240, 232, 0.55);
+      max-width: 380px;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.9s;
+    }
+
+    .btn-primary {
+      padding: 16px 40px;
+      background: var(--gold);
+      color: white;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: #7d60b8;
+    }
+
+    .btn-outline {
+      padding: 16px 40px;
+      border: 1px solid rgba(155, 127, 212, 0.5);
+      color: var(--gold-light);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .hero-right {
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-visual {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(135deg, rgba(155, 127, 212, 0.1) 0%, transparent 60%),
+        linear-gradient(225deg, rgba(224, 200, 245, 0.2) 0%, transparent 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .dress-silhouette {
+      width: 280px;
+      height: 420px;
+      position: relative;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards 1s;
+    }
+
+    .dress-silhouette svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .floating-label {
+      position: absolute;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .floating-label::before {
+      content: '';
+      width: 30px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .label-1 {
+      top: 25%;
+      right: 10%;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .label-2 {
+      bottom: 30%;
+      left: 8%;
+      animation: float 4s ease-in-out infinite 1s;
+    }
+
+    .label-3 {
+      top: 50%;
+      right: 5%;
+      animation: float 4s ease-in-out infinite 2s;
+    }
+
+    /* MARQUEE */
+    .marquee-strip {
+      background: var(--charcoal);
+      padding: 16px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-inner {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+
+    .marquee-inner span {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 40px;
+    }
+
+    .marquee-inner span.dot {
+      color: rgba(201, 169, 110, 0.4);
+      letter-spacing: 0;
+      margin: 0 10px;
+    }
+
+    /* ABOUT STRIP */
+    .about-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 1px solid rgba(155, 127, 212, 0.15);
+    }
+
+    .strip-item {
+      padding: 60px 50px;
+      border-right: 1px solid rgba(155, 127, 212, 0.15);
+      transition: background 0.4s ease;
+    }
+
+    .strip-item:last-child {
+      border-right: none;
+    }
+
+    .strip-item:hover {
+      background: rgba(155, 127, 212, 0.05);
+    }
+
+    .strip-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--gold-light);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .strip-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .strip-desc {
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 1.9;
+      color: var(--mid);
+    }
+
+    /* PROCESS */
+    .section {
+      padding: 120px 80px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1.2;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+
+    .process-card {
+      background: var(--cream);
+      padding: 56px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .process-card:hover {
+      background: var(--charcoal);
+    }
+
+    .process-card:hover .p-num,
+    .process-card:hover .p-title,
+    .process-card:hover .p-desc {
+      color: var(--cream);
+    }
+
+    .process-card:hover .p-icon {
+      border-color: var(--gold);
+    }
+
+    .process-card:hover .p-icon svg {
+      stroke: var(--gold);
+    }
+
+    .p-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-weight: 300;
+      color: rgba(155, 127, 212, 0.25);
+      line-height: 1;
+      transition: color 0.4s ease;
+    }
+
+    .p-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(155, 127, 212, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+      transition: all 0.4s ease;
+    }
+
+    .p-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--mid);
+      fill: none;
+      stroke-width: 1.5;
+      transition: stroke 0.4s ease;
+    }
+
+    .p-title {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 16px;
+      transition: color 0.4s ease;
+    }
+
+    .p-desc {
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: var(--mid);
+      transition: color 0.4s ease;
+    }
+
+    /* GALLERY TEASER */
+    .gallery-teaser {
+      padding: 80px;
+      background: var(--cream);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 280px 280px;
+      gap: 3px;
+    }
+
+    .g-item {
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .g-item.tall {
+      grid-row: span 2;
+    }
+
+    .g-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease;
+    }
+
+    .g-item:hover .g-inner {
+      transform: scale(1.04);
+    }
+
+    .g-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(26, 26, 26, 0.7));
+      padding: 30px 24px 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .g-item:hover .g-overlay {
+      opacity: 1;
+    }
+
+    .g-overlay span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    /* SVG placeholder patterns */
+    .pattern-1 {
+      background: linear-gradient(135deg, #c8a8f0 0%, #9b7fd4 40%, #6a4aab 100%);
+    }
+
+    .pattern-2 {
+      background: linear-gradient(225deg, #e0c8f5 0%, #c8a0e0 60%, #9060b8 100%);
+    }
+
+    .pattern-3 {
+      background: linear-gradient(180deg, #d4c8e8 0%, #a898c8 100%);
+    }
+
+    .pattern-4 {
+      background: linear-gradient(135deg, #1e1030 0%, #3a2060 60%, #5a3880 100%);
+    }
+
+    .pattern-5 {
+      background: linear-gradient(315deg, #d4b8f5 0%, #c8a8f0 100%);
+    }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      padding: 100px 80px;
+      background: var(--charcoal);
+    }
+
+    .testimonials .section-title {
+      color: var(--cream);
+    }
+
+    .testimonials .section-tag {
+      color: var(--gold);
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .test-card {
+      padding: 40px;
+      border: 1px solid rgba(155, 127, 212, 0.15);
+      position: relative;
+      transition: border-color 0.4s ease;
+    }
+
+    .test-card:hover {
+      border-color: rgba(155, 127, 212, 0.5);
+    }
+
+    .test-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      color: var(--gold);
+      line-height: 0.5;
+      margin-bottom: 24px;
+      opacity: 0.4;
+    }
+
+    .test-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: rgba(245, 240, 232, 0.8);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .test-author {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .test-role {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--mid);
+      margin-top: 4px;
+    }
+
+    /* NEWSLETTER */
+    .newsletter {
+      padding: 100px 80px;
+      text-align: center;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .newsletter::before {
+      content: 'IRIDESCENT';
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 220px;
+      font-weight: 300;
+      color: rgba(155, 127, 212, 0.07);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .newsletter .section-title {
+      margin-bottom: 20px;
+    }
+
+    .newsletter p {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--mid);
+      margin-bottom: 40px;
+      line-height: 2;
+    }
+
+    .email-form {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .email-form input {
+      flex: 1;
+      padding: 16px 24px;
+      border: 1px solid rgba(155, 127, 212, 0.4);
+      background: white;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--charcoal);
+      outline: none;
+    }
+
+    .email-form input::placeholder {
+      color: rgba(122, 107, 149, 0.5);
+    }
+
+    .email-form button {
+      padding: 16px 32px;
+      background: var(--gold);
+      border: none;
+      color: white;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .email-form button:hover {
+      background: var(--deep);
+    }
+
+    /* FOOTER */
+    footer {
+      background: #f0eafa;
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-brand .nav-logo {
+      color: #111111;
+      font-size: 24px;
+    }
+
+    .footer-brand p {
+      margin-top: 20px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: #111111;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul li a {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #111111;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      background: #e0d8f0;
+      padding: 20px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #111111;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* PAGE NAV INDICATOR */
+    .page-nav {
+      position: fixed;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .page-dot {
+      width: 6px;
+      height: 6px;
+      background: rgba(155, 127, 212, 0.3);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .page-dot.active {
+      background: var(--gold);
+      transform: scale(1.5);
+    }
+
+    /* ── INDEX: TABLET ── */
+    @media (max-width: 1024px) {
+      .hero-left {
+        padding: 120px 40px 60px;
+      }
+
+      .strip-item {
+        padding: 40px 30px;
+      }
+
+      .section {
+        padding: 80px 40px;
+      }
+
+      .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gallery-teaser {
+        padding: 60px 40px;
+      }
+
+      .testimonials {
+        padding: 60px 40px;
+      }
+
+      .newsletter {
+        padding: 60px 40px;
+      }
+    }
+
+    /* ── INDEX: MOBILE ── */
+    @media (max-width: 768px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left {
+        padding: 100px 24px 60px;
+      }
+
+      .hero-right {
+        display: none;
+      }
+
+      .page-nav {
+        display: none;
+      }
+
+      .about-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .strip-item {
+        border-right: none;
+        border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+        padding: 36px 24px;
+      }
+
+      .strip-item:last-child {
+        border-bottom: none;
+      }
+
+      .section {
+        padding: 60px 24px;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-teaser {
+        padding: 60px 24px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .g-item.tall {
+        grid-row: span 1;
+      }
+
+      .g-inner {
+        height: 220px;
+      }
+
+      .testimonials {
+        padding: 60px 24px;
+      }
+
+      .test-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .newsletter {
+        padding: 60px 24px;
+      }
+
+      .email-form {
+        flex-direction: column;
+        max-width: 100%;
+      }
+
+      .email-form input {
+        border: 1px solid rgba(201, 169, 110, 0.4);
+      }
+
+      .email-form button {
+        width: 100%;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="IRIDESCENT Boutique" /><span
+        class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Book a Session</a>
+    <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- SIDE DOTS -->
+  <div class="page-nav">
+    <div class="page-dot active"></div>
+    <div class="page-dot"></div>
+    <div class="page-dot"></div>
+    <div class="page-dot"></div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Bespoke Couture · Est. 2024</p>
+      <h1 class="hero-title">Where Your<br><em>Vision</em><br>Becomes Art</h1>
+      <p class="hero-subtitle">Every garment is a story. Bring us your imagination — we'll sculpt it into a dress that
+        exists only for you.</p>
+      <div class="hero-btns">
+        <a href="collection.html" class="btn-primary">View Collection</a>
+        <a href="process.html" class="btn-outline">How It Works</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual">
+        <div class="dress-silhouette">
+          <svg viewBox="0 0 280 420" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="dressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#c9a96e;stop-opacity:0.9" />
+                <stop offset="50%" style="stop-color:#e8d5b0;stop-opacity:0.7" />
+                <stop offset="100%" style="stop-color:#b8935a;stop-opacity:0.5" />
+              </linearGradient>
+              <filter id="soft">
+                <feGaussianBlur stdDeviation="1" />
+              </filter>
+            </defs>
+            <!-- Dress body -->
+            <path
+              d="M100 20 C100 20 90 30 88 60 C86 90 80 100 70 120 C55 145 30 160 20 200 C10 240 15 280 20 320 C25 360 30 410 30 410 L250 410 C250 410 255 360 260 320 C265 280 270 240 260 200 C250 160 225 145 210 120 C200 100 194 90 192 60 C190 30 180 20 180 20 Z"
+              fill="url(#dressGrad)" opacity="0.85" />
+            <!-- Waist -->
+            <path d="M88 160 C100 150 130 145 140 145 C150 145 180 150 192 160" fill="none"
+              stroke="rgba(201,169,110,0.4)" stroke-width="1" />
+            <!-- Neckline -->
+            <path d="M100 20 C110 35 125 42 140 42 C155 42 170 35 180 20" fill="none" stroke="rgba(201,169,110,0.5)"
+              stroke-width="1.5" />
+            <!-- Fabric fold lines -->
+            <path d="M80 200 C90 240 85 300 80 360" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
+            <path d="M140 170 C140 240 138 320 135 410" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
+            <path d="M200 200 C190 240 195 300 200 360" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" />
+            <!-- Shimmer -->
+            <ellipse cx="130" cy="100" rx="25" ry="60" fill="rgba(255,255,255,0.12)" filter="url(#soft)" />
+          </svg>
+        </div>
+        <div class="floating-label label-1">Bespoke Fit</div>
+        <div class="floating-label label-2">Your Vision</div>
+        <div class="floating-label label-3">Handcrafted</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>Bespoke Couture</span><span class="dot">◆</span>
+      <span>Handcrafted with Love</span><span class="dot">◆</span>
+      <span>Your Vision · Our Craft</span><span class="dot">◆</span>
+      <span>One of a Kind</span><span class="dot">◆</span>
+      <span>Designed for You</span><span class="dot">◆</span>
+      <span>IRIDESCENT Boutique</span><span class="dot">◆</span>
+      <span>Bespoke Couture</span><span class="dot">◆</span>
+      <span>Handcrafted with Love</span><span class="dot">◆</span>
+      <span>Your Vision · Our Craft</span><span class="dot">◆</span>
+      <span>One of a Kind</span><span class="dot">◆</span>
+      <span>Designed for You</span><span class="dot">◆</span>
+      <span>IRIDESCENT Boutique</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <div class="strip-item">
+      <span class="strip-num">01</span>
+      <span class="strip-label">Your Vision</span>
+      <p class="strip-desc">You share your imagination — a mood, a dream, an image. We listen with the precision of an
+        artist and the heart of a craftsperson.</p>
+    </div>
+    <div class="strip-item">
+      <span class="strip-num">02</span>
+      <span class="strip-label">Our Design</span>
+      <p class="strip-desc">Our designers translate your ideas into sketches and swatches. Every detail is deliberated
+        until it perfectly mirrors your inner vision.</p>
+    </div>
+    <div class="strip-item">
+      <span class="strip-num">03</span>
+      <span class="strip-label">Pure Creation</span>
+      <p class="strip-desc">Master tailors hand-craft your garment using the finest fabrics. The result is a wearable
+        piece of art that belongs only to you.</p>
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <section class="section">
+    <div class="section-header">
+      <p class="section-tag">The IRIDESCENT Method</p>
+      <h2 class="section-title">From <em>Dream</em> to<br>Dress</h2>
+    </div>
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="p-num">01</div>
+        <div class="p-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+          </svg>
+        </div>
+        <div class="p-title">Consultation</div>
+        <p class="p-desc">A personal session where you share your ideas, references, and dreams with our creative
+          director.</p>
+      </div>
+      <div class="process-card">
+        <div class="p-num">02</div>
+        <div class="p-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4l3 3" />
+          </svg>
+        </div>
+        <div class="p-title">Design Draft</div>
+        <p class="p-desc">Within 48 hours, receive exclusive hand-drawn sketches tailored precisely to your shared
+          vision.</p>
+      </div>
+      <div class="process-card">
+        <div class="p-num">03</div>
+        <div class="p-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        </div>
+        <div class="p-title">Fabric Selection</div>
+        <p class="p-desc">Choose from our curated library of premium silks, linens, and custom-dyed fabrics from global
+          artisans.</p>
+      </div>
+      <div class="process-card">
+        <div class="p-num">04</div>
+        <div class="p-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+          </svg>
+        </div>
+        <div class="p-title">Delivery</div>
+        <p class="p-desc">Your one-of-a-kind garment is delivered in our signature box — a moment as memorable as the
+          dress itself.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY TEASER -->
+  <div class="gallery-teaser">
+    <div class="section-header">
+      <p class="section-tag">Recent Creations</p>
+      <h2 class="section-title">A <em>Glimpse</em> of<br>Our Work</h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="g-item tall">
+        <div class="g-inner pattern-1"></div>
+        <div class="g-overlay"><span>Evening Gown · Silk</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner pattern-2"></div>
+        <div class="g-overlay"><span>Bridal · Lace & Tulle</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner pattern-3"></div>
+        <div class="g-overlay"><span>Cocktail · Chiffon</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner pattern-4"></div>
+        <div class="g-overlay"><span>Resort · Cotton Blend</span></div>
+      </div>
+      <div class="g-item">
+        <div class="g-inner pattern-5"></div>
+        <div class="g-overlay"><span>Formal · Crepe</span></div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:50px;">
+      <a href="collection.html" class="btn-primary" style="display:inline-block;">Explore Full Collection</a>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="section-header">
+      <p class="section-tag">Client Stories</p>
+      <h2 class="section-title">Words from Our <em>Muses</em></h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-quote">"</div>
+        <p class="test-text">They didn't just make a dress. They made me feel seen. I showed them a torn magazine page
+          and a childhood memory — they turned it into pure magic.</p>
+        <div class="test-author">Priya Mehta</div>
+        <div class="test-role">Wedding Client · Hyderabad</div>
+      </div>
+      <div class="test-card">
+        <div class="test-quote">"</div>
+        <p class="test-text">I had an abstract idea of flowing gold and dusk. The team at IRIDESCENT translated it into
+          the most breathtaking gown I've ever worn.</p>
+        <div class="test-author">Aisha Kapoor</div>
+        <div class="test-role">Gala Event · Mumbai</div>
+      </div>
+      <div class="test-card">
+        <div class="test-quote">"</div>
+        <p class="test-text">I kept saying "I don't know how to explain it" and they kept nodding and asking the right
+          questions until we found it. Truly extraordinary service.</p>
+        <div class="test-author">Leila Nair</div>
+        <div class="test-role">Anniversary Dress · Bangalore</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="section-header">
+      <p class="section-tag">Stay in the Atelier</p>
+      <h2 class="section-title">Join the <em>Circle</em></h2>
+    </div>
+    <p>Be the first to know about new collections, design inspirations,<br>and exclusive invitations to our atelier
+      events.</p>
+    <div class="email-form">
+      <input type="email" placeholder="Your email address" />
+      <button type="button">Subscribe</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo"><img src="logo.png" alt="IRIDESCENT Boutique" /><span
+          class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+      <p>A bespoke couture boutique where every garment is a collaboration between your imagination and our craft.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="collection.html">Collection</a></li>
+        <li><a href="process.html">Our Process</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Bridal Wear</a></li>
+        <li><a href="#">Evening Gowns</a></li>
+        <li><a href="#">Cocktail Dresses</a></li>
+        <li><a href="#">Resort Wear</a></li>
+        <li><a href="#">Alterations</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Atelier</h4>
+      <ul>
+        <li><a href="#">Hyderabad Studio</a></li>
+        <li><a href="#">Book Appointment</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">Care Guide</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <span>© 2024 IRIDESCENT Boutique. All rights reserved.</span>
+    <span>Crafted with love in Hyderabad</span>
+  </div>
+
+  <script>
+    // Hamburger nav
+    function toggleNav() {
+      const links = document.getElementById('navLinks');
+      const burger = document.getElementById('navBurger');
+      const isOpen = links.classList.toggle('open');
+      burger.textContent = isOpen ? '✕' : '☰';
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('navBurger').textContent = '☰';
+    }));
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      setTimeout(() => {
+        ring.style.left = e.clientX + 'px';
+        ring.style.top = e.clientY + 'px';
+      }, 80);
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px'; cursor.style.height = '20px';
+        ring.style.width = '50px'; ring.style.height = '50px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '12px'; cursor.style.height = '12px';
+        ring.style.width = '36px'; ring.style.height = '36px';
+      });
+    });
+
+    // Nav scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Intersection observer for animations
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+    }, { threshold: 0.1 });
+  </script>
+</body>
+
+</html>

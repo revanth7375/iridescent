@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection — IRIDESCENT Boutique</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #f0eafa;
+      --warm-white: #faf8ff;
+      --charcoal: #1a1528;
+      --gold: #9b7fd4;
+      --gold-light: #d4b8f5;
+      --blush: #e0c8f5;
+      --deep: #1e1030;
+      --mid: #111111;
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s, height 0.3s;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+      opacity: 0.6;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      background: rgba(250, 248, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(155, 127, 212, 0.2);
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-logo img {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-brand .nav-logo img {
+      height: 50px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-left: 14px;
+      padding-left: 14px;
+      border-left: 1px solid rgba(155, 127, 212, 0.5);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .nav-logo-text span {
+      color: var(--gold);
+    }
+
+    .footer-brand .nav-logo .nav-logo-text {
+      color: #111111;
+      border-left-color: rgba(155, 127, 212, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--charcoal);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 10px 28px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+      color: white;
+    }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 160px 80px 80px;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 60px;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(155, 127, 212, 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .ph-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .ph-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+
+    .ph-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .ph-right {
+      padding-bottom: 8px;
+    }
+
+    .ph-desc {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      line-height: 2;
+      color: rgba(245, 240, 232, 0.5);
+      margin-bottom: 30px;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      padding: 30px 80px;
+      border-bottom: 1px solid rgba(155, 127, 212, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      overflow-x: auto;
+    }
+
+    .filter-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      white-space: nowrap;
+    }
+
+    .filter-btn {
+      padding: 8px 22px;
+      border: 1px solid rgba(155, 127, 212, 0.25);
+      background: transparent;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--gold);
+      color: white;
+      border-color: var(--gold);
+    }
+
+    /* COLLECTION GRID */
+    .collection-section {
+      padding: 60px 80px 100px;
+    }
+
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .piece-card {
+      cursor: pointer;
+      transition: transform 0.4s ease;
+    }
+
+    .piece-card:hover {
+      transform: translateY(-8px);
+    }
+
+    .piece-img {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .piece-visual {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease;
+    }
+
+    .piece-card:hover .piece-visual {
+      transform: scale(1.05);
+    }
+
+    .piece-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 5px 14px;
+      background: var(--gold);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    .piece-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .piece-card:hover .piece-overlay {
+      opacity: 1;
+    }
+
+    .piece-overlay a {
+      padding: 12px 28px;
+      border: 1px solid white;
+      color: white;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+
+    .piece-overlay a:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .piece-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+    }
+
+    .piece-cat {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    .piece-note {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-top: 6px;
+    }
+
+    /* PATTERNS */
+    .v1 {
+      background: linear-gradient(160deg, #c8a8f0, #9b7fd4 40%, #6a4aab);
+    }
+
+    .v2 {
+      background: linear-gradient(200deg, #e0c8f5, #c8a0e0 60%, #9060b8);
+    }
+
+    .v3 {
+      background: linear-gradient(140deg, #1e1030, #3a2060 60%, #5a3880);
+    }
+
+    .v4 {
+      background: linear-gradient(180deg, #d4c8e8, #a898c8);
+    }
+
+    .v5 {
+      background: linear-gradient(120deg, #d4b8f5, #c8a8f0);
+    }
+
+    .v6 {
+      background: linear-gradient(220deg, #1a1528, #3a2060 50%, #9b7fd4);
+    }
+
+    .v7 {
+      background: linear-gradient(160deg, #e0c8f5, #9b7fd4 50%, #5a3080);
+    }
+
+    .v8 {
+      background: linear-gradient(200deg, #f0eafa, #d4b8f5 50%, #9b7fd4);
+    }
+
+    .v9 {
+      background: linear-gradient(140deg, #3a2060, #6a4aab 60%, #9b7fd4);
+    }
+
+    /* BESPOKE PROMPT CTA */
+    .bespoke-cta {
+      margin: 0 80px 100px;
+      background: var(--charcoal);
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bespoke-cta::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(155, 127, 212, 0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .bespoke-cta h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .bespoke-cta h3 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .bespoke-cta p {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      line-height: 2;
+      color: rgba(245, 240, 232, 0.5);
+    }
+
+    .btn-gold {
+      padding: 16px 40px;
+      background: var(--gold);
+      color: white;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+
+    .btn-gold:hover {
+      background: #7d60b8;
+    }
+
+    footer {
+      background: #f0eafa;
+      padding: 60px 80px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-brand .nav-logo {
+      color: #111111;
+      font-size: 24px;
+    }
+
+    .footer-brand p {
+      margin-top: 20px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: #111111;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul li a {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #111111;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      background: #e0d8f0;
+      padding: 20px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #111111;
+    }
+
+    /* ── COLLECTION: TABLET ── */
+    @media (max-width: 1024px) {
+      .page-hero {
+        padding: 120px 40px 60px;
+        gap: 30px;
+      }
+
+      .collection-section {
+        padding: 40px 40px 60px;
+      }
+
+      .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bespoke-cta {
+        margin: 0 40px 60px;
+        padding: 60px 40px;
+      }
+    }
+
+    /* ── COLLECTION: MOBILE ── */
+    @media (max-width: 768px) {
+      .page-hero {
+        grid-template-columns: 1fr;
+        padding: 100px 24px 40px;
+        gap: 16px;
+      }
+
+      .collection-section {
+        padding: 40px 24px 60px;
+      }
+
+      .collection-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bespoke-cta {
+        margin: 0 0 60px;
+        padding: 40px 24px;
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .filter-bar {
+        padding: 20px 24px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="IRIDESCENT Boutique" /><span
+        class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="collection.html" class="active">Collection</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Book a Session</a>
+    <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <div class="page-hero">
+    <div>
+      <p class="ph-tag">Our Collection</p>
+      <h1 class="ph-title">Every Piece,<br><em>A Portrait</em></h1>
+    </div>
+    <div class="ph-right">
+      <p class="ph-desc">Each garment in our collection began as a conversation — a mood, a memory, a dream. Browse the
+        stories we've brought to life, and imagine your own.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Filter by:</span>
+    <button class="filter-btn active" onclick="filterPieces('all',this)">All</button>
+    <button class="filter-btn" onclick="filterPieces('bridal',this)">Bridal</button>
+    <button class="filter-btn" onclick="filterPieces('evening',this)">Evening Gown</button>
+    <button class="filter-btn" onclick="filterPieces('cocktail',this)">Cocktail</button>
+    <button class="filter-btn" onclick="filterPieces('resort',this)">Resort Wear</button>
+    <button class="filter-btn" onclick="filterPieces('formal',this)">Formal</button>
+  </div>
+
+  <section class="collection-section">
+    <div class="collection-grid" id="collectionGrid">
+
+      <div class="piece-card" data-cat="evening">
+        <div class="piece-img">
+          <div class="piece-visual v1"></div>
+          <div class="piece-badge">New</div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Golden Dusk</div>
+        <div class="piece-cat">Evening Gown · Silk Charmeuse</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="bridal">
+        <div class="piece-img">
+          <div class="piece-visual v2"></div>
+          <div class="piece-badge">Signature</div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Blush Reverie</div>
+        <div class="piece-cat">Bridal · French Lace & Tulle</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="formal">
+        <div class="piece-img">
+          <div class="piece-visual v3"></div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Midnight Enigma</div>
+        <div class="piece-cat">Formal · Italian Crepe</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="resort">
+        <div class="piece-img">
+          <div class="piece-visual v4"></div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Coastal Drift</div>
+        <div class="piece-cat">Resort Wear · Linen Blend</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="cocktail">
+        <div class="piece-img">
+          <div class="piece-visual v5"></div>
+          <div class="piece-badge">Bestseller</div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Sundial</div>
+        <div class="piece-cat">Cocktail · Chiffon & Organza</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="evening">
+        <div class="piece-img">
+          <div class="piece-visual v6"></div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Eclipse</div>
+        <div class="piece-cat">Evening Gown · Velvet & Gold Thread</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="bridal">
+        <div class="piece-img">
+          <div class="piece-visual v7"></div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Ember Veil</div>
+        <div class="piece-cat">Bridal · Silk Georgette</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="cocktail">
+        <div class="piece-img">
+          <div class="piece-visual v8"></div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Ivory Noon</div>
+        <div class="piece-cat">Cocktail · Cotton Voile</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+      <div class="piece-card" data-cat="formal">
+        <div class="piece-img">
+          <div class="piece-visual v9"></div>
+          <div class="piece-badge">Limited</div>
+          <div class="piece-overlay"><a href="contact.html">Request This Style</a></div>
+        </div>
+        <div class="piece-name">Amber Archive</div>
+        <div class="piece-cat">Formal · Brocade</div>
+        <div class="piece-note">✦ Bespoke · Made to order</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BESPOKE CTA -->
+  <div class="bespoke-cta">
+    <div>
+      <h3>Don't see your <em>vision</em> here?</h3>
+      <p>Every piece we create is born from a client's imagination. Yours could be next. Share your dream with us and
+        we'll design something entirely your own.</p>
+    </div>
+    <a href="contact.html" class="btn-gold">Start Your Design</a>
+  </div>
+
+  <footer>
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo"><img src="logo.png" alt="IRIDESCENT Boutique" /><span
+          class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+      <p>A bespoke couture boutique where every garment is a collaboration between your imagination and our craft.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="collection.html">Collection</a></li>
+        <li><a href="process.html">Our Process</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Bridal Wear</a></li>
+        <li><a href="#">Evening Gowns</a></li>
+        <li><a href="#">Cocktail Dresses</a></li>
+        <li><a href="#">Resort Wear</a></li>
+        <li><a href="#">Alterations</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Atelier</h4>
+      <ul>
+        <li><a href="#">Hyderabad Studio</a></li>
+        <li><a href="contact.html">Book Appointment</a></li>
+        <li><a href="#">Gift Cards</a></li>
+        <li><a href="#">Care Guide</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom"><span>© 2024 IRIDESCENT Boutique. All rights reserved.</span><span>Crafted with love in
+      Hyderabad</span></div>
+
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('navLinks');
+      const burger = document.getElementById('navBurger');
+      const isOpen = links.classList.toggle('open');
+      burger.textContent = isOpen ? '✕' : '☰';
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('navBurger').textContent = '☰';
+    }));
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      setTimeout(() => { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px'; }, 80);
+    });
+
+    function filterPieces(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.piece-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
