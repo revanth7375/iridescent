@@ -1,0 +1,213 @@
+/* ============================================================
+   IRIDESCENT — Shared Responsive Stylesheet
+   Hamburger ≤ 900px  |  Tablet ≤ 1024px  |  Desktop > 900px
+   ============================================================ */
+
+/* Hide custom cursor on touch devices */
+@media (pointer: coarse) {
+
+  .cursor,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  body {
+    cursor: auto !important;
+  }
+}
+
+/* ── HAMBURGER BUTTON (hidden on desktop) ─────────────────── */
+.nav-burger {
+  display: none;
+  background: none;
+  border: 1px solid rgba(155, 127, 212, 0.45);
+  padding: 6px 13px;
+  font-size: 19px;
+  color: var(--charcoal, #1a1528);
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.nav-burger:hover {
+  border-color: var(--gold, #9b7fd4);
+  color: var(--gold, #9b7fd4);
+}
+
+/* ── NAV: TABLET (≤ 1024px, > 900px) — reduce padding only ── */
+@media (max-width: 1024px) and (min-width: 901px) {
+  nav {
+    padding: 20px 40px !important;
+  }
+
+  .nav-links {
+    gap: 24px !important;
+  }
+
+  .nav-cta {
+    display: none !important;
+  }
+}
+
+/* ── NAV: HAMBURGER (≤ 900px) ────────────────────────────── */
+@media (max-width: 900px) {
+  nav {
+    padding: 18px 24px !important;
+    z-index: 1060 !important;
+  }
+
+  .nav-burger {
+    display: block;
+  }
+
+  .nav-cta {
+    display: none !important;
+  }
+
+  /* Dropdown panel below navbar */
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(160deg, #1e1030 0%, #2d1a50 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    z-index: 1040;
+    list-style: none;
+    padding: 100px 40px 40px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(155, 127, 212, 0.2);
+  }
+
+  .nav-links.open {
+    display: flex;
+    animation: menuSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes menuSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav-links a {
+    font-size: 13px !important;
+    letter-spacing: 5px;
+    color: rgba(240, 234, 250, 0.8) !important;
+    transition: color 0.2s, letter-spacing 0.2s !important;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: #9b7fd4 !important;
+    letter-spacing: 7px !important;
+  }
+
+  .nav-links a::after {
+    background: #9b7fd4 !important;
+  }
+}
+
+/* ── FOOTER: TABLET ───────────────────────────────────────── */
+@media (max-width: 1024px) {
+  footer {
+    grid-template-columns: 1fr 1fr !important;
+    padding: 50px 40px !important;
+    gap: 40px !important;
+  }
+
+  .footer-bottom {
+    padding: 20px 40px !important;
+  }
+}
+
+/* ── FOOTER: MOBILE ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  footer {
+    grid-template-columns: 1fr !important;
+    padding: 40px 24px !important;
+    gap: 32px !important;
+  }
+
+  .footer-bottom {
+    padding: 20px 24px !important;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+}
+
+/* ── PROCESS TIMELINE: MOBILE ─────────────────────────────── */
+@media (max-width: 768px) {
+  .timeline::before {
+    display: none;
+  }
+
+  .timeline-section {
+    padding: 60px 24px !important;
+  }
+
+  .tl-item {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-bottom: 40px !important;
+  }
+
+  .tl-empty {
+    display: none !important;
+  }
+
+  .tl-center {
+    order: -1;
+    padding-top: 0 !important;
+    padding-bottom: 16px;
+    justify-content: flex-start !important;
+  }
+
+  .tl-content {
+    width: 100%;
+  }
+}
+
+/* ── FOUNDER SPOTLIGHT: MOBILE ────────────────────────────── */
+@media (max-width: 768px) {
+  .founder-spotlight {
+    grid-template-columns: 1fr !important;
+  }
+
+  .founder-photo {
+    min-height: 280px;
+  }
+
+  /* Switch overlay from left-right blend to top-bottom fade */
+  .founder-photo::after {
+    background: linear-gradient(to bottom, transparent 40%, var(--deep, #1e1030) 100%) !important;
+  }
+
+  .founder-info {
+    padding: 48px 28px !important;
+  }
+
+  .founder-info::before {
+    font-size: 80px !important;
+    top: 16px !important;
+    right: 24px !important;
+  }
+
+  .founder-name {
+    font-size: clamp(32px, 8vw, 44px) !important;
+  }
+}

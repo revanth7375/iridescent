@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saree Detail — IRIDESCENT</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #f0eafa;
+      --warm-white: #faf8ff;
+      --charcoal: #1a1528;
+      --gold: #9b7fd4;
+      --gold-light: #d4b8f5;
+      --blush: #e0c8f5;
+      --deep: #1e1030;
+      --mid: #111111;
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.3s, height 0.3s;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.15s ease;
+      opacity: 0.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 100px;
+      background: rgba(250, 248, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(155, 127, 212, 0.2);
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      align-self: stretch;
+    }
+
+    .nav-logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-left: 14px;
+      padding-left: 14px;
+      border-left: 1px solid rgba(155, 127, 212, 0.5);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .nav-logo-text span {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--charcoal);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 10px 28px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+      color: white;
+    }
+
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      color: var(--charcoal);
+    }
+
+    /* ── DETAIL LAYOUT ── */
+    .detail-section {
+      min-height: 100vh;
+      padding-top: 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* LEFT: image panel */
+    .detail-gallery {
+      position: sticky;
+      top: 100px;
+      height: calc(100vh - 100px);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .detail-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.7s ease;
+      will-change: opacity;
+    }
+
+    .detail-img-main {
+      opacity: 1;
+    }
+
+    .detail-img-hover {
+      opacity: 0;
+    }
+
+    .detail-gallery:hover .detail-img-hover {
+      opacity: 1;
+    }
+
+    .detail-gallery:hover .detail-img-main {
+      opacity: 0;
+    }
+
+    .gallery-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(240, 234, 250, 0.5);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* RIGHT: info panel */
+    .detail-info {
+      padding: 80px 70px 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--warm-white);
+    }
+
+    .detail-breadcrumb {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .detail-breadcrumb a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .detail-breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .detail-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(155, 127, 212, 0.6);
+      margin-bottom: 20px;
+    }
+
+    .detail-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 5vw, 68px);
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .detail-fabric {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 36px;
+    }
+
+    .detail-divider {
+      width: 56px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin-bottom: 36px;
+    }
+
+    .detail-desc {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      line-height: 2.2;
+      color: rgba(26, 21, 40, 0.65);
+      max-width: 480px;
+      margin-bottom: 44px;
+    }
+
+    .detail-specs {
+      list-style: none;
+      margin-bottom: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 32px;
+    }
+
+    .detail-specs li {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-specs li::before {
+      content: '✦';
+      color: var(--gold);
+      font-size: 8px;
+      flex-shrink: 0;
+    }
+
+    .detail-cta {
+      display: inline-block;
+      padding: 16px 44px;
+      background: var(--charcoal);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+      align-self: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .detail-cta:hover {
+      background: var(--gold);
+    }
+
+    /* ── FLOATING WHATSAPP BUTTON ── */
+    .wa-float {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 8000;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      text-decoration: none;
+    }
+
+    .wa-float-tooltip {
+      background: #1a1528;
+      color: #f0eafa;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      white-space: nowrap;
+      border-radius: 2px;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      margin-right: 12px;
+    }
+
+    .wa-float:hover .wa-float-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .wa-float-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .wa-float-btn::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(37, 211, 102, 0.5);
+      animation: wa-pulse 2s ease-out infinite;
+    }
+
+    .wa-float-btn::after {
+      content: '';
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(37, 211, 102, 0.25);
+      animation: wa-pulse 2s ease-out infinite 0.6s;
+    }
+
+    @keyframes wa-pulse {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(1.5);
+      }
+    }
+
+    .wa-float:hover .wa-float-btn {
+      transform: scale(1.08);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.55);
+    }
+
+    .wa-float-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
+
+    .detail-back {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(26, 21, 40, 0.35);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .detail-back:hover {
+      color: var(--gold);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--cream);
+      padding: 60px 80px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-brand .nav-logo img {
+      height: 50px;
+    }
+
+    .footer-brand p {
+      margin-top: 20px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: #111;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col a {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #111;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-col a:hover {
+      color: var(--gold);
+    }
+
+    .footer-brand .nav-logo-text {
+      color: #111;
+      border-left-color: rgba(155, 127, 212, 0.4);
+    }
+
+    .footer-bottom {
+      background: var(--charcoal);
+      color: rgba(240, 234, 250, 0.4);
+      padding: 16px 80px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-links,
+      .nav-cta {
+        display: none;
+      }
+
+      .nav-burger {
+        display: block;
+      }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        background: rgba(250, 248, 255, 0.98);
+        padding: 24px 28px;
+        gap: 24px;
+        z-index: 999;
+      }
+
+      .detail-section {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-gallery {
+        position: relative;
+        height: 70vw;
+        top: 0;
+      }
+
+      .detail-info {
+        padding: 48px 28px;
+      }
+
+      footer {
+        grid-template-columns: 1fr;
+        padding: 40px 24px;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        padding: 16px 24px;
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/8333907123" class="wa-float" target="_blank" rel="noopener" title="Chat on WhatsApp">
+    <span class="wa-float-tooltip">Chat on WhatsApp</span>
+    <span class="wa-float-btn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+        <path
+          d="M12 0C5.373 0 0 5.373 0 12c0 2.126.555 4.122 1.526 5.855L0 24l6.335-1.502A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.853 0-3.587-.5-5.089-1.375l-.361-.214-3.761.893.952-3.665-.235-.374A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+      </svg>
+    </span>
+  </a>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="Photos/Logo.png" alt="IRIDESCENT Boutique" /><span
+        class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="collection.html" class="active">Collection</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Book a Session</a>
+    <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- DETAIL -->
+  <div class="detail-section">
+    <div class="detail-gallery" id="gallery">
+      <img class="detail-img detail-img-main" id="imgMain" src="" alt="" />
+      <img class="detail-img detail-img-hover" id="imgHover" src="" alt="" />
+      <span class="gallery-hint">Hover to reveal</span>
+    </div>
+    <div class="detail-info">
+      <p class="detail-breadcrumb"><a href="collection.html">Collection</a> &nbsp;/&nbsp; Saree</p>
+      <p class="detail-tag" id="detailTag"></p>
+      <h1 class="detail-name" id="detailName"></h1>
+      <p class="detail-fabric" id="detailFabric"></p>
+      <div class="detail-divider"></div>
+      <p class="detail-desc" id="detailDesc"></p>
+      <ul class="detail-specs" id="detailSpecs"></ul>
+      <a href="contact.html" class="detail-cta">Request This Style</a>
+      <a href="collection.html?cat=saree" class="detail-back">← Back to Sarees</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo"><img src="Photos/Logo.png" alt="IRIDESCENT Boutique" /><span
+          class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+      <p>A couture where every garment is a collaboration between your imagination and our craft.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="collection.html">Collection</a></li>
+        <li><a href="process.html">Our Process</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="collection.html?cat=bridal">Bridal Wear</a></li>
+        <li><a href="collection.html?cat=evening">Evening Wear</a></li>
+        <li><a href="collection.html?cat=cocktail">Cocktail Wear</a></li>
+        <li><a href="collection.html?cat=saree">Saree</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Atelier</h4>
+      <ul>
+        <li><a href="contact.html#studio">Hyderabad Studio</a></li>
+        <li><a href="contact.html">Book Appointment</a></li>
+        <li><a href="contact.html">Gift Cards</a></li>
+        <li><a href="process.html">Care Guide</a></li>
+        <li><a href="process.html#faq">FAQ</a></li>
+        <li><a href="dashboard.html" style="opacity: 0.65;">Owner Dashboard</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <span>© 2024 IRIDESCENT. All rights reserved.</span>
+    <span>Crafted with love in India</span>
+  </div>
+
+  <script>
+    /* ── SAREE DATA ── */
+    const sarees = {
+      1: {
+        name: 'Heritage Drape',
+        fabric: 'Silk Blend',
+        tag: 'Saree · 01',
+        img1: 'Photos/Saree/1.1.JPG',
+        img2: 'Photos/Saree/1.2.JPG',
+        desc: 'A timeless weave that echoes the grandeur of traditional Indian craftsmanship. Draped in the finest silk blend, this piece embodies grace and tradition — a garment to be treasured across generations.',
+        specs: ['Pure Silk Blend', 'Handwoven', 'Custom drape available', 'Colour variants on request', 'Made to measure', 'Bespoke blouse']
+      },
+      2: {
+        name: 'Silk Reverie',
+        fabric: 'Pure Silk',
+        tag: 'Saree · 02',
+        img1: 'Photos/Saree/2.1.JPG',
+        img2: 'Photos/Saree/2.2.JPG',
+        desc: 'Soft as a dream, rich as heritage. Our Silk Reverie saree is woven from the finest mulberry silk, offering an ethereal drape that moves with effortless elegance at every step.',
+        specs: ['100% Mulberry Silk', 'Hand-finished borders', 'Blouse fabric included', 'Made to measure', 'Dry clean only', 'Bespoke lining']
+      },
+      3: {
+        name: 'Moonlit Weave',
+        fabric: 'Chanderi',
+        tag: 'Saree · 03',
+        img1: 'Photos/Saree/3.1.JPG',
+        img2: 'Photos/Saree/3.2.JPG',
+        desc: 'Gossamer-light Chanderi fabric catches every glimmer of light, creating an almost ethereal shimmer as you move. A perfect blend of tradition and contemporary grace for the modern woman.',
+        specs: ['Chanderi Silk-Cotton', 'Zari border detail', 'Lightweight & breathable', 'Custom length available', 'Hand-embroidered motifs', 'Occasion wear']
+      },
+      4: {
+        name: 'Golden Bloom',
+        fabric: 'Kanjivaram',
+        tag: 'Saree · 04',
+        img1: 'Photos/Saree/4.1.JPG',
+        img2: 'Photos/Saree/4.2.JPG',
+        desc: 'Steeped in centuries of weaving tradition, the Golden Bloom Kanjivaram is a celebration of South Indian artisanship. Heavy silk threads interlace to create a piece built to last a lifetime.',
+        specs: ['Authentic Kanjivaram Silk', 'Zari gold border', 'Temple motif detail', 'Heirloom quality', 'Bridal grade', 'Custom colour']
+      },
+      5: {
+        name: 'Twilight Zari',
+        fabric: 'Zari Weave',
+        tag: 'Saree · 05',
+        img1: 'Photos/Saree/5.1.JPG',
+        img2: 'Photos/Saree/5.2.JPG',
+        desc: 'Where craft meets artistry. The Twilight Zari features intricate metallic thread work that catches the light beautifully, creating a garment that glows with quiet opulence from dusk till dawn.',
+        specs: ['Pure Zari Thread Work', 'Hand-embroidered motifs', 'Rich pallu design', 'Occasion wear', 'Gold & silver tones', 'Made to order']
+      },
+      6: {
+        name: 'Pearl Banaras',
+        fabric: 'Banarasi Silk',
+        tag: 'Saree · 06',
+        img1: 'Photos/Saree/6.1.jpg',
+        img2: 'Photos/Saree/6.2.JPG',
+        desc: 'Born from the looms of Varanasi, the Pearl Banaras is a symphony of intricate brocade work and lustrous silk. A bridal-worthy masterpiece that honours tradition while feeling entirely contemporary.',
+        specs: ['Banarasi Pure Silk', 'Brocade weave throughout', 'Gold & silver zari', 'Made to order', 'Blouse included', 'Dry clean only']
+      }
+    };
+
+    /* ── POPULATE PAGE ── */
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id')) || 1;
+    const s = sarees[id] || sarees[1];
+
+    document.title = s.name + ' — IRIDESCENT Saree';
+    document.getElementById('imgMain').src = s.img1;
+    document.getElementById('imgMain').alt = s.name;
+    document.getElementById('imgHover').src = s.img2;
+    document.getElementById('imgHover').alt = s.name + ' – detail';
+    document.getElementById('detailTag').textContent = s.tag;
+    document.getElementById('detailName').textContent = s.name;
+    document.getElementById('detailFabric').textContent = s.fabric;
+    document.getElementById('detailDesc').textContent = s.desc;
+    document.getElementById('detailSpecs').innerHTML = s.specs.map(sp => `<li>${sp}</li>`).join('');
+
+    /* ── NAV TOGGLE ── */
+    function toggleNav() {
+      const links = document.getElementById('navLinks');
+      const burger = document.getElementById('navBurger');
+      const isOpen = links.classList.toggle('open');
+      burger.textContent = isOpen ? '✕' : '☰';
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('navBurger').textContent = '☰';
+    }));
+
+    /* ── CURSOR ── */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      setTimeout(() => { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px'; }, 80);
+    });
+  </script>
+  <!-- Client-Side Analytics Tracker -->
+  <script src="analytics.js"></script>
+</body>
+
+</html>

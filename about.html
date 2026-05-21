@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — IRIDESCENT Boutique</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #f0eafa;
+      --warm-white: #faf8ff;
+      --charcoal: #1a1528;
+      --gold: #9b7fd4;
+      --gold-light: #d4b8f5;
+      --blush: #e0c8f5;
+      --deep: #1e1030;
+      --mid: #111111;
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+    }
+
+    .cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      opacity: 0.6;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 100px;
+      background: rgba(250, 248, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(155, 127, 212, 0.2);
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      align-self: stretch;
+    }
+
+    .nav-logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-brand .nav-logo img {
+      height: 64px;
+      filter: brightness(1.1);
+    }
+
+    .nav-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-left: 14px;
+      padding-left: 14px;
+      border-left: 1px solid rgba(155, 127, 212, 0.5);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+
+    .nav-logo-text span {
+      color: var(--gold);
+    }
+
+    .footer-brand .nav-logo .nav-logo-text {
+      color: #111111;
+      border-left-color: rgba(155, 127, 212, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--charcoal);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 10px 28px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold);
+      color: white;
+    }
+
+    /* HERO — VIDEO BACKGROUND */
+    .about-hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .about-hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .about-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+          rgba(30, 16, 48, 0.80) 0%,
+          rgba(26, 21, 40, 0.65) 60%,
+          rgba(155, 127, 212, 0.15) 100%);
+      z-index: 1;
+    }
+
+    .ah-left {
+      position: relative;
+      z-index: 2;
+      padding: 160px 80px 100px;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ah-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .ah-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 30px;
+    }
+
+    .ah-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .ah-story {
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 2.2;
+      color: rgba(245, 240, 232, 0.65);
+      max-width: 480px;
+      margin-bottom: 50px;
+    }
+
+    .ah-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--gold);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.45);
+      margin-top: 4px;
+    }
+
+    /* Unused right-column stubs */
+    .ah-right,
+    .ah-img1,
+    .ah-img2 {
+      display: none;
+    }
+
+    /* STORY SECTION */
+    .story-section {
+      padding: 120px 80px;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .divider {
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    }
+
+    .story-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .story-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1.2;
+      margin-bottom: 28px;
+    }
+
+    .story-title em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .story-body {
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 2.2;
+      color: var(--mid);
+    }
+
+    .story-body p {
+      margin-bottom: 20px;
+    }
+
+    .story-pull {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--charcoal);
+      line-height: 1.5;
+      border-left: 2px solid var(--gold);
+      padding-left: 28px;
+      margin: 30px 0;
+    }
+
+    /* TEAM */
+    .team-section {
+      padding: 100px 80px;
+      background: var(--charcoal);
+    }
+
+    .team-section .section-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .team-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 60px;
+    }
+
+    .team-section h2 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    /* FOUNDER SPOTLIGHT */
+    .founder-spotlight {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      min-height: 520px;
+      overflow: hidden;
+      border: 1px solid rgba(155, 127, 212, 0.15);
+    }
+
+    .founder-photo {
+      background: linear-gradient(160deg, #6a4aab 0%, #9b7fd4 50%, #c8a0e0 100%);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.6s ease;
+    }
+
+    .founder-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--charcoal) 100%);
+    }
+
+    .founder-spotlight:hover .founder-photo {
+      transform: scale(1.02);
+    }
+
+    .founder-info {
+      padding: 70px 60px;
+      background: var(--deep);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .founder-info::before {
+      content: '\201C';
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 120px;
+      color: rgba(155, 127, 212, 0.1);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .founder-label {
+      font-size: 9px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .founder-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .founder-role {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 32px;
+    }
+
+    .founder-divider {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin-bottom: 32px;
+    }
+
+    .founder-bio {
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      line-height: 2.2;
+      color: rgba(240, 234, 250, 0.65);
+      max-width: 440px;
+    }
+
+    .founder-signature {
+      margin-top: 40px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(212, 184, 245, 0.5);
+      letter-spacing: 2px;
+    }
+
+    /* Legacy stubs kept for safety */
+    .team-grid,
+    .team-card,
+    .team-photo,
+    .tc1,
+    .tc2,
+    .tc3,
+    .team-info,
+    .team-name,
+    .team-role,
+    .team-bio {
+      display: none;
+    }
+
+    /* VALUES */
+    .values-section {
+      padding: 100px 80px;
+      background: var(--cream);
+    }
+
+    .values-section .section-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .values-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 52px);
+      font-weight: 300;
+      color: var(--charcoal);
+      margin-bottom: 60px;
+    }
+
+    .values-section h2 em {
+      font-style: italic;
+      color: var(--mid);
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+    }
+
+    .value-item {
+      padding: 60px;
+      background: white;
+      border: 1px solid rgba(155, 127, 212, 0.1);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-item::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.4s ease;
+    }
+
+    .value-item:hover::before {
+      width: 100%;
+    }
+
+    .value-item:hover {
+      box-shadow: 0 20px 60px rgba(155, 127, 212, 0.12);
+    }
+
+    .value-icon {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    .value-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 300;
+      color: var(--charcoal);
+      margin-bottom: 16px;
+    }
+
+    .value-desc {
+      font-size: 11px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: var(--mid);
+    }
+
+    /* CTA */
+    .about-cta {
+      padding: 100px 80px;
+      background: var(--deep);
+      text-align: center;
+    }
+
+    .about-cta .section-tag {
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .about-cta h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 24px;
+      line-height: 1.15;
+    }
+
+    .about-cta h2 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .about-cta p {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      line-height: 2;
+      color: rgba(245, 240, 232, 0.45);
+      max-width: 500px;
+      margin: 0 auto 50px;
+    }
+
+    .btn-gold {
+      padding: 16px 48px;
+      background: var(--gold);
+      color: white;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      transition: background 0.3s;
+      display: inline-block;
+    }
+
+    .btn-gold:hover {
+      background: #7d60b8;
+    }
+
+    footer {
+      background: #f0eafa;
+      padding: 60px 80px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+    }
+
+    .footer-brand p {
+      margin-top: 20px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      line-height: 2;
+      color: #111111;
+      max-width: 240px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul li a {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #111111;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      background: #e0d8f0;
+      padding: 20px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #111111;
+    }
+
+    /* ── ABOUT: TABLET ── */
+    @media (max-width: 1024px) {
+      .ah-left {
+        padding: 120px 40px 60px;
+      }
+
+      .story-section {
+        padding: 60px 40px;
+        gap: 40px;
+      }
+
+      .team-section {
+        padding: 60px 40px;
+      }
+
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .values-section {
+        padding: 60px 40px;
+      }
+
+      .about-cta {
+        padding: 60px 40px;
+      }
+    }
+
+    /* ── ABOUT: MOBILE ── */
+    @media (max-width: 768px) {
+      .about-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .ah-left {
+        padding: 100px 24px 60px;
+      }
+
+      .ah-right {
+        display: none;
+      }
+
+      .ah-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .stat-num {
+        font-size: 32px;
+      }
+
+      .story-section {
+        grid-template-columns: 1fr;
+        padding: 60px 24px;
+        gap: 40px;
+      }
+
+      .divider {
+        display: none;
+      }
+
+      .team-section {
+        padding: 60px 24px;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .values-section {
+        padding: 60px 24px;
+      }
+
+      .values-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .value-item {
+        padding: 40px 24px;
+      }
+
+      .about-cta {
+        padding: 60px 24px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="Photos/Logo.png" alt="IRIDESCENT Boutique" /><span
+        class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="process.html">Our Process</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Book a Session</a>
+    <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <div class="about-hero">
+    <video class="about-hero-video" autoplay muted loop playsinline>
+      <source src="Video/Walking Video.mp4" type="video/mp4">
+    </video>
+    <div class="about-hero-overlay"></div>
+    <div class="ah-left">
+      <p class="ah-tag">Our Story</p>
+      <h1 class="ah-title">Beauty lies in the<br><em>Harmony</em><br>Of Colours</h1>
+      <p class="ah-story">Iridescent Is About Celebrating You, the unique light within every individual, turning the
+        everyday into something extraordinary.</p>
+      <div class="ah-stats">
+        <div><span class="stat-num">500+</span><span class="stat-label">Dresses Created</span></div>
+        <div><span class="stat-num">04</span><span class="stat-label">Years of Craft</span></div>
+        <div><span class="stat-num">100%</span><span class="stat-label">Bespoke Always</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <section class="story-section">
+    <div>
+      <p class="story-tag">The Origin</p>
+      <h2 class="story-title">An <em>Idea</em><br>That became IRIDESCENT</h2>
+      <div class="story-body">
+        <p>Iridescent was founded by Rachana Talasila with a vision to create timeless pieces inspired by nature,
+          individuality, and refined craftsmanship. Rooted in minimalism and elegance, the brand blends heritage
+          artistry with contemporary design to create pieces that feel personal, meaningful, and enduring.</p>
+        <p>Inspired by the glow of sunrise, soft hues of dawn, and the beauty of simplicity, every Iridescent creation
+          is thoughtfully crafted to celebrate individuality and timeless luxury — a true celebration of you.</p>
+        <div class="story-pull">"Iridescent was never just about clothing — it was about creating pieces that make
+          people feel seen, confident, and celebrated."</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <p class="story-tag">The Philosophy</p>
+      <h2 class="story-title">What We <em>Believe</em></h2>
+      <div class="story-body">
+        <p>Our commitment goes beyond aesthetics—we believe in the transformative power of clothing to elevate not just
+          appearance, but spirit. Every piece we create is meticulously crafted with care, passion, and a focus on
+          sustainability, ensuring it stands as a symbol of quality, integrity, and conscious luxury</p>
+        <div class="story-pull">"We believe that clothing should be more than just a statement"</div>
+        <p>—it should be a celebration of who you are, enhancing your inner radiance and inspiring you to shine brighter
+          every day..</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDER SPOTLIGHT -->
+  <section class="team-section">
+    <p class="section-tag">The Visionary</p>
+    <h2>The <em>Mind</em> Behind the Atelier</h2>
+    <div class="founder-spotlight">
+      <div class="founder-photo"></div>
+      <div class="founder-info">
+        <p class="founder-label">Founder &amp; Creative Director</p>
+        <div class="founder-name">Rachana<br>Talasila</div>
+        <div class="founder-role">IRIDESCENT Designer Studio</div>
+        <div class="founder-divider"></div>
+        <p class="founder-bio">With a passion for meaningful design and refined simplicity, we created IRIDESCENT to
+          craft pieces that feel elegant, personal, and deeply cherished.</p>
+        <div class="founder-signature">— Rachana Talasila</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES -->
+  <section class="values-section">
+    <p class="section-tag">What We Stand For</p>
+    <h2>Our <em>Values</em></h2>
+    <div class="values-grid">
+      <div class="value-item">
+        <div class="value-icon">✦</div>
+        <div class="value-title">Originality Above All</div>
+        <p class="value-desc">We never duplicate a design. Every IRIDESCENT piece is created once and belongs
+          exclusively to the client who inspired it. Your dress will never be worn by a stranger.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">◈</div>
+        <div class="value-title">Deep Listening</div>
+        <p class="value-desc">Our consultations are not sales meetings. They are creative conversations where we ask
+          more than we speak — because the dress lives in your words first.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">❧</div>
+        <div class="value-title">Sustainable Craftsmanship</div>
+        <p class="value-desc">We source ethically, produce slowly, and build garments that last. In a world of fast
+          fashion, we are proudly, deliberately slow — and every stitch reflects that care.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">⊹</div>
+        <div class="value-title">Inclusivity by Design</div>
+        <p class="value-desc">Bespoke means made for you — your body, your story, your size. We celebrate every form and
+          have never turned away a client for any reason of size, shape, or background.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="about-cta">
+    <p class="section-tag">Let's Create Together</p>
+    <h2>Your Story Deserves<br>to Be <em>Worn</em></h2>
+    <p>Come meet us. Bring your ideas — rough, dreamy, half-formed, or crystal clear. We'll turn them into something
+      you'll wear for the rest of your life.</p>
+    <a href="contact.html" class="btn-gold">Book Your Consultation</a>
+  </div>
+
+  <footer>
+    <div class="footer-brand"><a href="index.html" class="nav-logo"><img src="Photos/Logo.png"
+          alt="IRIDESCENT Boutique" /><span class="nav-logo-text">IRIDESCENT<span>.</span></span></a>
+      <p>A couture where every garment is a collaboration between your imagination and our craft.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="collection.html">Collection</a></li>
+        <li><a href="process.html">Our Process</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="collection.html?cat=bridal">Bridal Wear</a></li>
+        <li><a href="collection.html?cat=evening">Evening Wear</a></li>
+        <li><a href="collection.html?cat=cocktail">Cocktail Wear</a></li>
+        <li><a href="collection.html?cat=saree">Saree</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Atelier</h4>
+      <ul>
+        <li><a href="contact.html#studio">Hyderabad Studio</a></li>
+        <li><a href="contact.html">Book Appointment</a></li>
+        <li><a href="contact.html">Gift Cards</a></li>
+        <li><a href="process.html">Care Guide</a></li>
+        <li><a href="process.html#faq">FAQ</a></li>
+        <li><a href="dashboard.html" style="opacity: 0.65;">Owner Dashboard</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom"><span>© 2024 IRIDESCENT. All rights reserved.</span><span>Crafted with love in
+      India</span></div>
+
+  <script>
+    function toggleNav() {
+      const links = document.getElementById('navLinks');
+      const burger = document.getElementById('navBurger');
+      const isOpen = links.classList.toggle('open');
+      burger.textContent = isOpen ? '✕' : '☰';
+    }
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+      document.getElementById('navBurger').textContent = '☰';
+    }));
+
+    /* Slow the hero background video to a cinematic 40% speed */
+    const heroVideo = document.querySelector('.about-hero-video');
+    if (heroVideo) {
+      heroVideo.addEventListener('loadeddata', () => { heroVideo.playbackRate = 0.4; });
+      heroVideo.playbackRate = 0.4; // fallback if already loaded
+    }
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+
+    let mx = 0, my = 0;   // raw mouse position
+    let rx = 0, ry = 0;   // ring lerp position
+    const LERP = 0.12;    // 0 = never catches up, 1 = instant
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    (function animate() {
+      rx += (mx - rx) * LERP;
+      ry += (my - ry) * LERP;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animate);
+    })();
+  </script>
+  <!-- Client-Side Analytics Tracker -->
+  <script src="analytics.js"></script>
+</body>
+
+</html>

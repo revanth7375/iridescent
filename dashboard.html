@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owner Dashboard — IRIDESCENT Boutique</title>
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Styling -->
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cream: #f0eafa;
+      --warm-white: #faf8ff;
+      --charcoal: #1a1528;
+      --gold: #9b7fd4;
+      --gold-light: #d4b8f5;
+      --blush: #e0c8f5;
+      --deep: #1e1030;
+      --mid: #111111;
+      --glass: rgba(30, 16, 48, 0.4);
+      --border: rgba(155, 127, 212, 0.15);
+      --text-muted: rgba(240, 234, 250, 0.6);
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: #0f0b18;
+      /* Luxurious dark violet-black */
+      color: #faf8ff;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f0b18;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 3px;
+    }
+
+    /* AUTH SCREEN */
+    #authScreen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0f0b18 0%, #1e1030 100%);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(26, 21, 40, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      padding: 48px 36px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .auth-logo span {
+      color: var(--gold);
+    }
+
+    .auth-subtitle {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 40px;
+    }
+
+    .auth-input-group {
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .auth-input-group label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .auth-input-group input {
+      width: 100%;
+      padding: 16px;
+      background: rgba(155, 127, 212, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .auth-input-group input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(155, 127, 212, 0.2);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--gold);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .auth-btn:hover {
+      background: #7d60b8;
+      transform: translateY(-2px);
+    }
+
+    .auth-hint {
+      font-size: 10px;
+      color: rgba(240, 234, 250, 0.4);
+      margin-top: 24px;
+      letter-spacing: 1px;
+    }
+
+    .quick-access-btn {
+      background: transparent;
+      border: 1px solid rgba(155, 127, 212, 0.3);
+      color: var(--gold-light);
+      padding: 8px 16px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      margin-top: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .quick-access-btn:hover {
+      background: rgba(155, 127, 212, 0.1);
+      border-color: var(--gold);
+    }
+
+    /* MAIN CONTAINER */
+    #dashboardWrapper {
+      display: none;
+      min-height: 100vh;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    /* NAVIGATION */
+    header {
+      background: rgba(15, 11, 24, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-brand .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: white;
+    }
+
+    .header-brand .logo span {
+      color: var(--gold);
+    }
+
+    .header-badge {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: rgba(155, 127, 212, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 16px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      border: 1px solid rgba(155, 127, 212, 0.3);
+      background: transparent;
+      color: white;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(155, 127, 212, 0.1);
+      border-color: var(--gold);
+    }
+
+    /* GRID LAYOUTS */
+    .dashboard-content {
+      padding: 40px 48px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* KPI CONTAINER */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: rgba(26, 21, 40, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(155, 127, 212, 0.4);
+    }
+
+    .kpi-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .kpi-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: white;
+      line-height: 1;
+    }
+
+    .kpi-trend {
+      font-size: 9px;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kpi-trend.positive {
+      color: #55c070;
+    }
+
+    .kpi-trend.negative {
+      color: #c05050;
+    }
+
+    /* CHARTS CONTAINER */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .chart-card {
+      background: rgba(26, 21, 40, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .chart-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      font-weight: 400;
+    }
+
+    .chart-subtitle {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .chart-body {
+      position: relative;
+      width: 100%;
+      height: 320px;
+    }
+
+    /* LOWER SECTIONS */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    /* DATA TABLES */
+    .panel-card {
+      background: rgba(26, 21, 40, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      height: 480px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    .panel-action {
+      display: flex;
+      gap: 12px;
+    }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    /* LEADS MANAGER CARDS */
+    .lead-card {
+      background: rgba(30, 16, 48, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .lead-card:hover {
+      border-color: rgba(155, 127, 212, 0.35);
+      background: rgba(30, 16, 48, 0.5);
+    }
+
+    .lead-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed rgba(155, 127, 212, 0.15);
+      padding-bottom: 8px;
+    }
+
+    .lead-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--warm-white);
+    }
+
+    .lead-tag {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: rgba(155, 127, 212, 0.2);
+      border: 1px solid rgba(155, 127, 212, 0.4);
+      color: var(--gold-light);
+      border-radius: 2px;
+    }
+
+    .lead-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: var(--text-muted);
+    }
+
+    .lead-details span strong {
+      color: var(--gold-light);
+      font-weight: normal;
+    }
+
+    .lead-vision {
+      font-size: 11px;
+      line-height: 1.6;
+      color: rgba(245, 240, 232, 0.8);
+      font-style: italic;
+      padding: 10px 14px;
+      background: rgba(15, 11, 24, 0.4);
+      border-left: 2px solid var(--gold);
+      margin-top: 8px;
+    }
+
+    .lead-delete-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: transparent;
+      border: none;
+      color: rgba(200, 80, 80, 0.6);
+      cursor: pointer;
+      font-size: 12px;
+      transition: color 0.2s;
+    }
+
+    .lead-delete-btn:hover {
+      color: #ff6060;
+    }
+
+    /* RECENT VISITOR ACTIVITY FEED */
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: start;
+      gap: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(155, 127, 212, 0.08);
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(155, 127, 212, 0.1);
+      border: 1px solid rgba(155, 127, 212, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--gold-light);
+      flex-shrink: 0;
+    }
+
+    .activity-content {
+      flex: 1;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+    }
+
+    .activity-text strong {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
+    .activity-meta {
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: flex;
+      gap: 10px;
+    }
+
+    /* SIMULATOR PANEL */
+    .control-deck {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 21, 40, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px 30px;
+      margin-bottom: 40px;
+    }
+
+    .control-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+    }
+
+    .control-desc {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: rgba(155, 127, 212, 0.2);
+      transition: .4s;
+      border: 1px solid rgba(155, 127, 212, 0.4);
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.toggle-slider {
+      background-color: var(--gold);
+    }
+
+    input:checked+.toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn-danger {
+      padding: 10px 20px;
+      border: 1px solid rgba(200, 80, 80, 0.4);
+      background: transparent;
+      color: #ff8080;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-danger:hover {
+      background: rgba(200, 80, 80, 0.1);
+      border-color: #ff6060;
+    }
+
+    /* TOAST NOTIFICATION */
+    .dashboard-toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1a1528;
+      border: 1px solid var(--gold);
+      padding: 16px 24px;
+      border-radius: 4px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 10000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: slideInUp 0.4s ease forwards;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      header {
+        padding: 20px 24px;
+      }
+
+      .dashboard-content {
+        padding: 30px 24px;
+      }
+
+      .control-deck {
+        flex-direction: column;
+        align-items: start;
+        gap: 20px;
+      }
+
+      .control-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ADMIN PASSCODE LOCK SCREEN -->
+  <section id="authScreen">
+    <div class="auth-card">
+      <h1 class="auth-logo">IRIDESCENT<span>.</span></h1>
+      <p class="auth-subtitle">Owner Administration</p>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="auth-input-group">
+          <label for="passcodeInput">Enter Administrator Passcode</label>
+          <input type="password" id="passcodeInput" maxlength="6" placeholder="••••" required autofocus />
+        </div>
+
+        <button type="submit" class="auth-btn">Authorize Access →</button>
+      </form>
+
+      <div class="auth-hint">
+        Default Owner Passcode: <strong>1234</strong>
+      </div>
+      <button class="quick-access-btn" onclick="quickAccess()">Demo Quick Access ✦</button>
+    </div>
+  </section>
+
+  <!-- DASHBOARD COMMAND PORTAL -->
+  <div id="dashboardWrapper">
+    <header>
+      <div class="header-brand">
+        <a href="index.html" class="logo">IRIDESCENT<span>.</span></a>
+        <span class="header-badge">Admin Panel</span>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn-secondary" onclick="exportData()">Export DB</button>
+        <a href="index.html" class="btn-secondary">✦ Back to Boutique</a>
+        <button class="btn-secondary" onclick="handleLogout()"
+          style="border-color: rgba(200,80,80,0.3); color: #ff8080;">Logout</button>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+
+      <!-- LIVE SIMULATOR CONTROL DECK -->
+      <section class="control-deck">
+        <div>
+          <h3 class="control-title">Interactive Control Deck</h3>
+          <p class="control-desc">Enable dynamic simulated traffic or reset your client-side tracking state.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:30px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span
+              style="font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--gold-light);">Simulate
+              Live Traffic</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="simulatorToggle" onchange="toggleSimulator(this)">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="control-buttons">
+            <button class="btn-secondary" onclick="seedDemoData()"
+              style="border-color: var(--gold); color: var(--gold-light); margin-right: 8px;">Seed Demo Data</button>
+            <button class="btn-danger" onclick="resetDatabase()">Reset Tracker DB</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOP STATISTICS CARDS -->
+      <section class="kpi-grid">
+        <!-- 1. PAGE VIEWS -->
+        <div class="kpi-card">
+          <div class="kpi-label">Total Page Views</div>
+          <div class="kpi-value" id="kpiPageviews">0</div>
+          <div class="kpi-trend" id="trendPageviews">✦ 0% <span style="color:var(--text-muted);">vs last week</span>
+          </div>
+        </div>
+        <!-- 2. UNIQUE VISITORS -->
+        <div class="kpi-card">
+          <div class="kpi-label">Unique Visitors</div>
+          <div class="kpi-value" id="kpiVisitors">0</div>
+          <div class="kpi-trend" id="trendVisitors">✦ 0% <span style="color:var(--text-muted);">vs last week</span>
+          </div>
+        </div>
+        <!-- 3. INTERACTIVE CONVERSIONS -->
+        <div class="kpi-card">
+          <div class="kpi-label">Active Conversions</div>
+          <div class="kpi-value" id="kpiConversions">0</div>
+          <div class="kpi-trend" id="trendConversions">✦ 0% <span style="color:var(--text-muted);">vs last week</span>
+          </div>
+        </div>
+        <!-- 4. CONVERSION RATE -->
+        <div class="kpi-card">
+          <div class="kpi-label">Conversion Rate</div>
+          <div class="kpi-value" id="kpiConvRate">0.0%</div>
+          <div class="kpi-trend" id="trendConvRate">✦ 0% <span style="color:var(--text-muted);">vs last week</span>
+          </div>
+        </div>
+        <!-- 5. AVG SESSION DURATION -->
+        <div class="kpi-card">
+          <div class="kpi-label">Avg. Session Time</div>
+          <div class="kpi-value" id="kpiDuration">0s</div>
+          <div class="kpi-trend" id="trendDuration">✦ 0% <span style="color:var(--text-muted);">vs last week</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- DYNAMIC CHARTING SECTION -->
+      <section class="charts-grid">
+        <!-- LINE CHART: VISITS OVER TIME -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Traffic Overview</h3>
+              <p class="chart-subtitle" style="margin-top:4px;">Daily unique visitors and pageviews</p>
+            </div>
+            <div class="chart-subtitle">Last 14 Days</div>
+          </div>
+          <div class="chart-body">
+            <canvas id="trafficChart"></canvas>
+          </div>
+        </div>
+
+        <!-- PIE CHART: INTERACTIVE INTERESTS -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">User Interests</h3>
+              <p class="chart-subtitle" style="margin-top:4px;">Boutique category clicks</p>
+            </div>
+          </div>
+          <div class="chart-body" style="height:260px;">
+            <canvas id="interestsChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECONDARY CHARTS & LISTS -->
+      <section class="details-grid">
+        <!-- DOUGHNUT CHART: REFERRAL CHANNELS -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3 class="chart-title">Referral Channels</h3>
+              <p class="chart-subtitle" style="margin-top:4px;">Traffic acquisition sources</p>
+            </div>
+          </div>
+          <div class="chart-body" style="height:320px;">
+            <canvas id="referralsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- REAL SUBSCRIBERS LIST -->
+        <div class="panel-card" style="height:380px;">
+          <div class="panel-header">
+            <h3 class="panel-title">Newsletter Circle Subscribers</h3>
+            <span class="header-badge" id="subscribersCount">0 Subscribed</span>
+          </div>
+          <div class="panel-body" style="overflow-y:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left; letter-spacing:1px;">
+              <thead>
+                <tr
+                  style="border-bottom:1px solid var(--border); color:var(--gold-light); font-size:9px; text-transform:uppercase;">
+                  <th style="padding:10px 0;">Subscriber Email</th>
+                  <th style="padding:10px 0; text-align:right;">Subscribed On</th>
+                </tr>
+              </thead>
+              <tbody id="subscribersTableBody">
+                <!-- Injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEADS & LOGS SECTION -->
+      <section class="details-grid" style="grid-template-columns: 1.6fr 1fr;">
+        <!-- CONSULTATION LEADS (REAL FORM CAPTURES!) -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">Bespoke Consultation Leads</h3>
+            <span class="header-badge" id="leadsCount">0 Leads</span>
+          </div>
+          <div class="panel-body" id="leadsContainer">
+            <!-- Lead cards injected dynamically -->
+          </div>
+        </div>
+
+        <!-- REAL-TIME VISITOR LOG -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">Real-Time Visitor Log</h3>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span
+                style="display:inline-block; width:6px; height:6px; background:#55c070; border-radius:50%; animation: pulse 1.5s infinite;"></span>
+              <span style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:#55c070;">Live
+                Tracking</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="activity-feed" id="activityFeed">
+              <!-- Visitor activity items injected dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Real-time animation styles -->
+  <style>
+    @keyframes pulse {
+      0% {
+        opacity: 0.4;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.4;
+      }
+    }
+  </style>
+
+  <!-- CONTROL SCRIPTS -->
+  <script>
+    const STORAGE_KEY = 'iridescent_analytics';
+    const PASSCODE = '1234';
+    let charts = {};
+    let simulatorInterval = null;
+    let lastDbString = '';
+    let dashboardPollInterval = null;
+
+    // PAGE INITIALIZATION & SECURITY
+    window.onload = function () {
+      // Check authentication
+      if (sessionStorage.getItem('iridescent_authenticated') === 'true') {
+        revealDashboard();
+      }
+    };
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const pin = document.getElementById('passcodeInput').value;
+      if (pin === PASSCODE) {
+        sessionStorage.setItem('iridescent_authenticated', 'true');
+        revealDashboard();
+      } else {
+        alert('Invalid Owner Passcode. Please try again.');
+        document.getElementById('passcodeInput').value = '';
+        document.getElementById('passcodeInput').focus();
+      }
+    }
+
+    function quickAccess() {
+      sessionStorage.setItem('iridescent_authenticated', 'true');
+      revealDashboard();
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('iridescent_authenticated');
+      stopDashboardPolling();
+      const wrapper = document.getElementById('dashboardWrapper');
+      const auth = document.getElementById('authScreen');
+
+      wrapper.style.opacity = '0';
+      setTimeout(() => {
+        wrapper.style.display = 'none';
+        auth.style.display = 'flex';
+        setTimeout(() => {
+          auth.style.opacity = '1';
+        }, 10);
+      }, 500);
+    }
+
+    function revealDashboard() {
+      const auth = document.getElementById('authScreen');
+      const wrapper = document.getElementById('dashboardWrapper');
+
+      auth.style.opacity = '0';
+      setTimeout(() => {
+        auth.style.display = 'none';
+        wrapper.style.display = 'block';
+        setTimeout(() => {
+          wrapper.style.opacity = '1';
+          loadDashboardData();
+          startDashboardPolling();
+        }, 50);
+      }, 500);
+    }
+
+    function startDashboardPolling() {
+      if (dashboardPollInterval) clearInterval(dashboardPollInterval);
+      dashboardPollInterval = setInterval(() => {
+        if (!document.hidden) {
+          loadDashboardData();
+        }
+      }, 1500); // Check localStorage every 1.5 seconds for true real-time updates
+    }
+
+    function stopDashboardPolling() {
+      if (dashboardPollInterval) {
+        clearInterval(dashboardPollInterval);
+        dashboardPollInterval = null;
+      }
+    }
+
+    // Pause polling when tab is inactive to preserve battery/CPU
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopDashboardPolling();
+      } else if (sessionStorage.getItem('iridescent_authenticated') === 'true') {
+        startDashboardPolling();
+      }
+    });
+
+    // MAIN LOADER FOR DATA & METRICS
+    function loadDashboardData() {
+      const db = getDatabase();
+      const currentDbString = JSON.stringify(db);
+
+      // If nothing has changed, do not recreate charts or lists (prevents UI flicker)
+      if (currentDbString === lastDbString) {
+        return;
+      }
+      lastDbString = currentDbString;
+
+      // Update Key Metrics
+      updateKPIs(db);
+
+      // Render Charts
+      renderTrafficChart(db);
+      renderInterestsChart(db);
+      renderReferralsChart(db);
+
+      // Render Lists
+      renderLeads(db);
+      renderSubscribers(db);
+      renderVisitorLog(db);
+    }
+
+    function getDatabase() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (!data) return { visitors: [], pageviews: [], events: [], leads: [], subscribers: [] };
+      return JSON.parse(data);
+    }
+
+    function saveDatabase(db) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
+
+    // CALCULATE AND UPDATE KPIs
+    function updateKPIs(db) {
+      const totalPageviews = db.pageviews.length;
+      const totalVisitors = db.visitors.length;
+      const totalLeads = db.leads.length;
+      const totalSubscribers = db.subscribers.length;
+      const totalConversions = totalLeads + totalSubscribers;
+
+      const convRate = totalVisitors > 0 ? ((totalConversions / totalVisitors) * 100).toFixed(1) : '0.0';
+
+      // Avg session duration calculation
+      let totalDuration = 0;
+      let durationCount = 0;
+      db.visitors.forEach(v => {
+        if (v.duration && v.duration > 0) {
+          totalDuration += v.duration;
+          durationCount++;
+        }
+      });
+      const avgDurationSec = durationCount > 0 ? Math.round(totalDuration / durationCount) : 0;
+      const minutes = Math.floor(avgDurationSec / 60);
+      const seconds = avgDurationSec % 60;
+      const avgDurationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+
+      document.getElementById('kpiPageviews').innerText = totalPageviews.toLocaleString();
+      document.getElementById('kpiVisitors').innerText = totalVisitors.toLocaleString();
+      document.getElementById('kpiConversions').innerText = totalConversions.toLocaleString();
+      document.getElementById('kpiConvRate').innerText = convRate + '%';
+      document.getElementById('kpiDuration').innerText = avgDurationStr;
+
+      // DYNAMIC TRENDS (Last 7 Days vs Preceding 7 Days)
+      const now = Date.now();
+      const oneDay = 24 * 60 * 60 * 1000;
+      const sevenDays = 7 * oneDay;
+      const currentStart = now - sevenDays;
+      const precedingStart = now - (14 * oneDay);
+
+      // 1. Pageviews Trend
+      const currentPV = db.pageviews.filter(pv => pv.timestamp >= currentStart).length;
+      const precedingPV = db.pageviews.filter(pv => pv.timestamp >= precedingStart && pv.timestamp < currentStart).length;
+      updateTrendUI('trendPageviews', currentPV, precedingPV, 'vs last week');
+
+      // 2. Visitors Trend
+      const currentV = db.visitors.filter(v => v.timestamp >= currentStart).length;
+      const precedingV = db.visitors.filter(v => v.timestamp >= precedingStart && v.timestamp < currentStart).length;
+      updateTrendUI('trendVisitors', currentV, precedingV, 'vs last week');
+
+      // 3. Conversions Trend
+      const currentC = db.leads.filter(l => l.timestamp >= currentStart).length + db.subscribers.filter(s => s.timestamp >= currentStart).length;
+      const precedingC = db.leads.filter(l => l.timestamp >= precedingStart && l.timestamp < currentStart).length + db.subscribers.filter(s => s.timestamp >= precedingStart && s.timestamp < currentStart).length;
+      updateTrendUI('trendConversions', currentC, precedingC, 'vs last week');
+
+      // 4. Conversion Rate Trend
+      const currentCR = currentV > 0 ? (currentC / currentV) : 0;
+      const precedingCR = precedingV > 0 ? (precedingC / precedingV) : 0;
+      updateTrendUI('trendConvRate', currentCR * 100, precedingCR * 100, 'vs last week');
+
+      // 5. Avg Session Duration Trend
+      let currentDurTotal = 0, currentDurCount = 0;
+      let precedingDurTotal = 0, precedingDurCount = 0;
+      db.visitors.forEach(v => {
+        if (v.duration && v.duration > 0) {
+          if (v.timestamp >= currentStart) {
+            currentDurTotal += v.duration;
+            currentDurCount++;
+          } else if (v.timestamp >= precedingStart && v.timestamp < currentStart) {
+            precedingDurTotal += v.duration;
+            precedingDurCount++;
+          }
+        }
+      });
+      const currentAvgDur = currentDurCount > 0 ? currentDurTotal / currentDurCount : 0;
+      const precedingAvgDur = precedingDurCount > 0 ? precedingDurTotal / precedingDurCount : 0;
+      updateTrendUI('trendDuration', currentAvgDur, precedingAvgDur, 'vs last week');
+    }
+
+    function updateTrendUI(elementId, current, preceding, labelText) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+
+      let pct = 0;
+      if (preceding === 0) {
+        pct = current > 0 ? 100 : 0;
+      } else {
+        pct = Math.round(((current - preceding) / preceding) * 100);
+      }
+
+      if (pct > 0) {
+        el.className = 'kpi-trend positive';
+        el.style.color = '#55c070';
+        el.innerHTML = `✦ +${pct}% <span style="color:var(--text-muted);">${labelText}</span>`;
+      } else if (pct < 0) {
+        el.className = 'kpi-trend negative';
+        el.style.color = '#c05050';
+        el.innerHTML = `✦ ${pct}% <span style="color:var(--text-muted);">${labelText}</span>`;
+      } else {
+        el.className = 'kpi-trend';
+        el.style.color = 'var(--text-muted)';
+        el.innerHTML = `✦ 0% <span style="color:var(--text-muted);">${labelText}</span>`;
+      }
+    }
+
+    // RENDER TRAFFIC LINE CHART
+    function renderTrafficChart(db) {
+      const ctx = document.getElementById('trafficChart').getContext('2d');
+      if (charts.traffic) charts.traffic.destroy();
+
+      // Aggregate pageviews and visitors over the last 14 days
+      const days = [];
+      const pageviewsData = [];
+      const visitorsData = [];
+      const now = Date.now();
+      const oneDay = 24 * 60 * 60 * 1000;
+
+      for (let i = 13; i >= 0; i--) {
+        const date = new Date(now - (i * oneDay));
+        const dayStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        days.push(dayStr);
+
+        // Filter events for this exact day (00:00 to 23:59)
+        const startOfDay = new Date(date.setHours(0, 0, 0, 0)).getTime();
+        const endOfDay = new Date(date.setHours(23, 59, 59, 999)).getTime();
+
+        const pvs = db.pageviews.filter(pv => pv.timestamp >= startOfDay && pv.timestamp <= endOfDay).length;
+        const vits = db.visitors.filter(v => v.timestamp >= startOfDay && v.timestamp <= endOfDay).length;
+
+        pageviewsData.push(pvs);
+        visitorsData.push(vits);
+      }
+
+      charts.traffic = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: days,
+          datasets: [
+            {
+              label: 'Page Views',
+              data: pageviewsData,
+              borderColor: '#9b7fd4',
+              backgroundColor: 'rgba(155, 127, 212, 0.1)',
+              tension: 0.4,
+              fill: true,
+              borderWidth: 2,
+              pointBackgroundColor: '#9b7fd4'
+            },
+            {
+              label: 'Unique Visitors',
+              data: visitorsData,
+              borderColor: '#e0c8f5',
+              backgroundColor: 'rgba(224, 200, 245, 0.05)',
+              tension: 0.4,
+              fill: true,
+              borderWidth: 2,
+              pointBackgroundColor: '#e0c8f5'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: 'rgba(240, 234, 250, 0.7)',
+                font: { family: "'Josefin Sans', sans-serif" }
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: { color: 'rgba(155, 127, 212, 0.06)' },
+              ticks: { color: 'rgba(240, 234, 250, 0.5)', font: { family: "'Josefin Sans', sans-serif" } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: 'rgba(240, 234, 250, 0.5)', font: { family: "'Josefin Sans', sans-serif" } }
+            }
+          }
+        }
+      });
+    }
+
+    // RENDER INTERESTS DOUGHNUT CHART
+    function renderInterestsChart(db) {
+      const ctx = document.getElementById('interestsChart').getContext('2d');
+      if (charts.interests) charts.interests.destroy();
+
+      // Count dynamic interest clicks
+      const counts = { bridal: 0, evening: 0, saree: 0, cocktail: 0, formal: 0 };
+
+      // Parse active filter events
+      db.events.forEach(ev => {
+        if (ev.type === 'Filter_Change') {
+          const category = ev.label.toLowerCase();
+          if (counts.hasOwnProperty(category)) counts[category]++;
+        }
+      });
+
+      const totalClicks = Object.values(counts).reduce((a, b) => a + b, 0);
+      let dataValues = [];
+      let labelValues = [];
+      let bgColors = [];
+
+      if (totalClicks === 0) {
+        labelValues = ['No Live Clicks Yet'];
+        dataValues = [1];
+        bgColors = ['rgba(155, 127, 212, 0.15)'];
+      } else {
+        labelValues = ['Bridal Wear', 'Evening Gown', 'Saree', 'Cocktail Dress', 'Formal Wear'];
+        dataValues = [counts.bridal, counts.evening, counts.saree, counts.cocktail, counts.formal];
+        bgColors = ['#e0c8f5', '#9b7fd4', '#d4b8f5', '#6a4aab', '#c8a0e0'];
+      }
+
+      charts.interests = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labelValues,
+          datasets: [{
+            data: dataValues,
+            backgroundColor: bgColors,
+            borderWidth: 1,
+            borderColor: '#0f0b18'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: 'rgba(240, 234, 250, 0.7)',
+                font: { family: "'Josefin Sans', sans-serif", size: 10 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // RENDER REFERRALS HORIZONTAL BAR CHART
+    function renderReferralsChart(db) {
+      const ctx = document.getElementById('referralsChart').getContext('2d');
+      if (charts.referrals) charts.referrals.destroy();
+
+      // Count referrals
+      const counts = { 'Instagram': 0, 'Pinterest': 0, 'Direct': 0, 'Google Search': 0, 'Facebook': 0 };
+
+      db.visitors.forEach(v => {
+        if (counts.hasOwnProperty(v.referrer)) {
+          counts[v.referrer]++;
+        } else {
+          // Put other custom domains inside Direct or create general category
+          counts['Direct']++;
+        }
+      });
+
+      charts.referrals = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(counts),
+          datasets: [{
+            label: 'Referral Sessions',
+            data: Object.values(counts),
+            backgroundColor: 'rgba(155, 127, 212, 0.65)',
+            borderColor: '#9b7fd4',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(155, 127, 212, 0.05)' },
+              ticks: { color: 'rgba(240, 234, 250, 0.5)', font: { family: "'Josefin Sans', sans-serif" } }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { color: 'rgba(240, 234, 250, 0.7)', font: { family: "'Josefin Sans', sans-serif" } }
+            }
+          }
+        }
+      });
+    }
+
+    // RENDER LEAD LIST CARDS
+    function renderLeads(db) {
+      const container = document.getElementById('leadsContainer');
+      const leadsCount = document.getElementById('leadsCount');
+
+      container.innerHTML = '';
+      leadsCount.innerText = `${db.leads.length} Leads`;
+
+      if (db.leads.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px; color:var(--text-muted); font-size:11px; letter-spacing:1px;">
+            ✦ No active bespoke leads found.
+          </div>
+        `;
+        return;
+      }
+
+      // Sort by newest leads
+      const sortedLeads = [...db.leads].sort((a, b) => b.timestamp - a.timestamp);
+
+      sortedLeads.forEach(lead => {
+        const card = document.createElement('div');
+        card.className = 'lead-card';
+        card.id = lead.id;
+
+        const dateStr = new Date(lead.timestamp).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        card.innerHTML = `
+          <button class="lead-delete-btn" onclick="deleteLead('${lead.id}')" title="Archive/Delete Lead">✕</button>
+          <div class="lead-meta">
+            <div class="lead-name">${lead.first_name} ${lead.last_name}</div>
+            <div class="lead-tag">${lead.garment_type}</div>
+          </div>
+          <div class="lead-details">
+            <span><strong>Email:</strong> ${lead.email}</span>
+            <span><strong>Phone:</strong> ${lead.phone || 'N/A'}</span>
+            <span><strong>Budget:</strong> ${lead.budget_range || 'Flexible'}</span>
+            <span><strong>Event Date:</strong> ${lead.event_date || 'N/A'}</span>
+          </div>
+          <div class="lead-vision">
+            "${lead.vision}"
+          </div>
+          <div style="font-size:8px; text-transform:uppercase; color:var(--text-muted); text-align:right; margin-top:8px; letter-spacing:1px;">
+            Received: ${dateStr}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // RENDER SUBSCRIBERS TABLE
+    function renderSubscribers(db) {
+      const tbody = document.getElementById('subscribersTableBody');
+      const countLabel = document.getElementById('subscribersCount');
+
+      tbody.innerHTML = '';
+      countLabel.innerText = `${db.subscribers.length} Subscribed`;
+
+      if (db.subscribers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="2" style="text-align:center; padding:30px; color:var(--text-muted);">
+              No newsletter subscribers yet.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const sortedSubs = [...db.subscribers].sort((a, b) => b.timestamp - a.timestamp);
+
+      sortedSubs.forEach(sub => {
+        const row = document.createElement('tr');
+        row.style.borderBottom = '1px solid rgba(155, 127, 212, 0.05)';
+
+        const dateStr = new Date(sub.timestamp).toLocaleDateString(undefined, {
+          month: 'short', day: 'numeric', year: 'numeric'
+        });
+
+        row.innerHTML = `
+          <td style="padding:12px 0; color:var(--warm-white);">${sub.email}</td>
+          <td style="padding:12px 0; text-align:right; color:var(--text-muted);">${dateStr}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // RENDER RECENT VISITOR LOG
+    function renderVisitorLog(db) {
+      const feed = document.getElementById('activityFeed');
+      feed.innerHTML = '';
+
+      // Get last 8 visitor logs sorted by newest
+      const visitors = [...db.visitors].sort((a, b) => b.timestamp - a.timestamp).slice(0, 8);
+
+      if (visitors.length === 0) {
+        feed.innerHTML = `
+          <div style="text-align:center; padding:30px; color:var(--text-muted); font-size:11px;">
+            No visitor history tracked yet.
+          </div>
+        `;
+        return;
+      }
+
+      visitors.forEach(visitor => {
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+
+        const dateStr = new Date(visitor.timestamp).toLocaleTimeString(undefined, {
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+
+        // Find last page viewed by this visitor
+        const pageviews = db.pageviews.filter(pv => pv.visitorId === visitor.id);
+        const lastPv = pageviews.length > 0 ? pageviews[pageviews.length - 1] : { title: 'Landed', path: '/' };
+
+        // Clean page name
+        const pageName = lastPv.path.replace('.html', '').replace('/', '').toUpperCase() || 'HOME';
+
+        // Choose icon
+        let icon = '💻';
+        if (visitor.device === 'Mobile') icon = '📱';
+        else if (visitor.device === 'Tablet') icon = '📟';
+
+        item.innerHTML = `
+          <div class="activity-icon">${icon}</div>
+          <div class="activity-content">
+            <div class="activity-text">
+              Visitor from <strong>${visitor.location}</strong> active on <strong>${pageName}</strong>
+            </div>
+            <div class="activity-meta">
+              <span>Time: ${dateStr}</span>
+              <span>Device: ${visitor.device}</span>
+              <span>Source: ${visitor.referrer}</span>
+            </div>
+          </div>
+        `;
+        feed.appendChild(item);
+      });
+    }
+
+    // DELETE A LEAD DYNAMICALLY
+    function deleteLead(leadId) {
+      if (confirm('Are you sure you want to archive/delete this lead?')) {
+        const db = getDatabase();
+        db.leads = db.leads.filter(l => l.id !== leadId);
+        saveDatabase(db);
+        loadDashboardData();
+        showToastAlert('Lead deleted successfully.');
+      }
+    }
+
+    // RESET ANALYTICS DATABASE (Leaves it 100% clean and live)
+    function resetDatabase() {
+      if (confirm('Are you sure you want to wipe all tracked statistics? This will reset the database to a completely clean, empty live state.')) {
+        const cleanDb = {
+          visitors: [],
+          pageviews: [],
+          events: [],
+          leads: [],
+          subscribers: []
+        };
+        saveDatabase(cleanDb);
+        loadDashboardData();
+        showToastAlert('Database wiped to clean live state.');
+      }
+    }
+
+    // SEED ANALYTICS DATABASE WITH DEMO DATA FOR PREVIEW
+    function seedDemoData() {
+      if (confirm('Are you sure you want to seed 30 days of simulated premium boutique traffic? This will overwrite your current tracking data.')) {
+        const REFERRERS = ['Instagram', 'Pinterest', 'Direct', 'Google Search', 'Facebook'];
+        const DEVICES = ['Desktop', 'Mobile', 'Tablet'];
+        const LOCATIONS = [
+          'Hyderabad, India', 'New Delhi, India', 'Mumbai, India', 'Bangalore, India',
+          'London, UK', 'New York, USA', 'Dubai, UAE', 'Singapore', 'San Francisco, USA'
+        ];
+        const PAGES = [
+          { path: '/index.html', title: 'Home — IRIDESCENT Boutique' },
+          { path: '/collection.html', title: 'Collection — IRIDESCENT Boutique' },
+          { path: '/process.html', title: 'Our Process — IRIDESCENT Boutique' },
+          { path: '/about.html', title: 'About — IRIDESCENT Boutique' },
+          { path: '/contact.html', title: 'Contact — IRIDESCENT Boutique' },
+          { path: '/saree-detail.html', title: 'Heritage Drape — IRIDESCENT Boutique' }
+        ];
+
+        const db = {
+          visitors: [],
+          pageviews: [],
+          events: [],
+          leads: [
+            {
+              id: 'lead_1',
+              first_name: 'Priya',
+              last_name: 'Mehta',
+              email: 'priya.m@gmail.com',
+              phone: '+91 98491 23456',
+              garment_type: 'Bridal Gown',
+              event_date: '2026-11-20',
+              budget_range: '₹1,20,000 and above',
+              vision: 'I want a blush pink wedding lehenga/gown blend with delicate French lace and a long tulle trail. Something radiant and ethereal.',
+              timestamp: Date.now() - (4 * 24 * 60 * 60 * 1000)
+            },
+            {
+              id: 'lead_2',
+              first_name: 'Aisha',
+              last_name: 'Kapoor',
+              email: 'aisha.k@yahoo.com',
+              phone: '+91 90001 87654',
+              garment_type: 'Evening Gown',
+              event_date: '2026-08-15',
+              budget_range: '₹60,000 – ₹1,20,000',
+              vision: 'A bespoke structured emerald silk evening gown for an awards gala. I love geometric draping and deep necklines.',
+              timestamp: Date.now() - (12 * 24 * 60 * 60 * 1000)
+            },
+            {
+              id: 'lead_3',
+              first_name: 'Leila',
+              last_name: 'Nair',
+              email: 'leila.nair@hotmail.com',
+              phone: '+91 88855 43210',
+              garment_type: 'Saree',
+              event_date: '2026-10-05',
+              budget_range: '₹30,000 – ₹60,000',
+              vision: 'A modern lightweight tissue silk saree with contemporary hand embroidery along the borders. Want it for my 25th anniversary.',
+              timestamp: Date.now() - (22 * 24 * 60 * 60 * 1000)
+            }
+          ],
+          subscribers: [
+            { email: 'meera.patel@outlook.com', timestamp: Date.now() - (2 * 24 * 60 * 60 * 1000) },
+            { email: 'karan.johal@gmail.com', timestamp: Date.now() - (7 * 24 * 60 * 60 * 1000) },
+            { email: 'sara.khan92@yahoo.com', timestamp: Date.now() - (15 * 24 * 60 * 60 * 1000) },
+            { email: 'richard.smith@gmail.com', timestamp: Date.now() - (25 * 24 * 60 * 60 * 1000) }
+          ]
+        };
+
+        const now = Date.now();
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        for (let i = 30; i >= 0; i--) {
+          const dayTimestamp = now - (i * oneDay);
+          const visitorsCount = Math.floor(Math.random() * 41) + 20;
+
+          for (let v = 0; v < visitorsCount; v++) {
+            const visitorId = 'v_' + Math.random().toString(36).substr(2, 9);
+            const referrer = REFERRERS[Math.floor(Math.random() * REFERRERS.length)];
+            const device = DEVICES[Math.floor(Math.random() * DEVICES.length)];
+            const location = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+            const duration = Math.floor(Math.random() * 240) + 15;
+
+            db.visitors.push({
+              id: visitorId,
+              timestamp: dayTimestamp + Math.floor(Math.random() * 12 * 60 * 60 * 1000),
+              referrer,
+              device,
+              location,
+              duration
+            });
+
+            const pagesCount = Math.floor(Math.random() * 5) + 1;
+            const shuffledPages = [...PAGES].sort(() => 0.5 - Math.random());
+
+            for (let p = 0; p < pagesCount; p++) {
+              const pg = shuffledPages[p];
+              db.pageviews.push({
+                visitorId,
+                path: pg.path,
+                title: pg.title,
+                timestamp: dayTimestamp + Math.floor(Math.random() * 12 * 60 * 60 * 1000)
+              });
+            }
+
+            if (Math.random() > 0.85) {
+              const eventTypes = ['CTA_Click', 'Filter_Change', 'Product_View'];
+              const type = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+              let label = 'Book Session';
+              if (type === 'Filter_Change') {
+                label = ['bridal', 'evening', 'saree', 'cocktail', 'formal'][Math.floor(Math.random() * 5)];
+              } else if (type === 'Product_View') {
+                label = ['Golden Dusk', 'Blush Reverie', 'Midnight Enigma', 'Heritage Drape'][Math.floor(Math.random() * 4)];
+              }
+
+              db.events.push({
+                visitorId,
+                type,
+                label,
+                timestamp: dayTimestamp + Math.floor(Math.random() * 12 * 60 * 60 * 1000)
+              });
+            }
+          }
+        }
+
+        saveDatabase(db);
+        loadDashboardData();
+        showToastAlert('Database successfully seeded with demo data.');
+      }
+    }
+
+    // EXPORT DATA AS JSON FILE
+    function exportData() {
+      const db = getDatabase();
+      const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `iridescent_analytics_export_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // LIVE TRAFFIC SIMULATOR
+    function toggleSimulator(checkbox) {
+      if (checkbox.checked) {
+        showToastAlert('Live traffic simulator activated.');
+        startTrafficSimulation();
+      } else {
+        showToastAlert('Live traffic simulator deactivated.');
+        stopTrafficSimulation();
+      }
+    }
+
+    function startTrafficSimulation() {
+      if (simulatorInterval) clearInterval(simulatorInterval);
+
+      const CITIES = ['Hyderabad, India', 'New Delhi, India', 'Mumbai, India', 'London, UK', 'New York, USA', 'Dubai, UAE', 'Singapore'];
+      const SOURCES = ['Instagram', 'Pinterest', 'Google Search', 'Facebook', 'Direct'];
+      const PAGE_PATHS = ['/index.html', '/collection.html', '/process.html', '/about.html', '/contact.html', '/saree-detail.html'];
+      const DEVICES = ['Desktop', 'Mobile', 'Tablet'];
+
+      simulatorInterval = setInterval(() => {
+        const db = getDatabase();
+        const visitorId = 'v_sim_' + Math.random().toString(36).substr(2, 9);
+        const city = CITIES[Math.floor(Math.random() * CITIES.length)];
+        const source = SOURCES[Math.floor(Math.random() * SOURCES.length)];
+        const path = PAGE_PATHS[Math.floor(Math.random() * PAGE_PATHS.length)];
+        const device = DEVICES[Math.floor(Math.random() * DEVICES.length)];
+
+        // 1. Add Visitor
+        db.visitors.push({
+          id: visitorId,
+          timestamp: Date.now(),
+          referrer: source,
+          device,
+          location: city + ' (Simulated)',
+          duration: Math.floor(Math.random() * 120) + 10
+        });
+
+        // 2. Add Pageview
+        db.pageviews.push({
+          visitorId,
+          path,
+          title: path.replace('.html', '').replace('/', '').toUpperCase() || 'HOME',
+          timestamp: Date.now()
+        });
+
+        // 3. Occasionally simulate custom event or conversion
+        const rand = Math.random();
+        if (rand > 0.85) {
+          // Subscribe Simulation!
+          const emails = ['ananya.r@gmail.com', 'rahul.s@outlook.com', 'lisa.k@yahoo.co.uk', 'vikram.das@gmail.com'];
+          const simEmail = emails[Math.floor(Math.random() * emails.length)];
+          const alreadySubs = db.subscribers.some(s => s.email === simEmail);
+
+          if (!alreadySubs) {
+            db.subscribers.push({
+              email: simEmail,
+              timestamp: Date.now()
+            });
+            db.events.push({
+              visitorId,
+              type: 'Goal_Conversion',
+              label: 'Newsletter Subscribed (Simulated)',
+              timestamp: Date.now()
+            });
+            showToastAlert(`New Subscriber: ${simEmail}`);
+          }
+        } else if (rand > 0.95) {
+          // Lead Simulation!
+          const firstNames = ['Riya', 'Kavya', 'Siddharth', 'Nikhil'];
+          const lastNames = ['Sharma', 'Reddy', 'Varma', 'Sen'];
+          const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+          const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+          const types = ['Bridal Gown', 'Evening Gown', 'Saree', 'Cocktail Dress'];
+
+          const newSimLead = {
+            id: 'lead_sim_' + Math.random().toString(36).substr(2, 9),
+            first_name: fName,
+            last_name: lName,
+            email: `${fName.toLowerCase()}.${lName.toLowerCase()}@example.com`,
+            phone: '+91 99009 ' + Math.floor(Math.random() * 90000 + 10000),
+            garment_type: types[Math.floor(Math.random() * types.length)],
+            event_date: '2026-12-25',
+            budget_range: '₹60,000 – ₹1,20,000',
+            vision: 'I am planning a contemporary reception look. Looking for a modern minimalist drape styled as a gown.',
+            timestamp: Date.now()
+          };
+
+          db.leads.push(newSimLead);
+          db.events.push({
+            visitorId,
+            type: 'Goal_Conversion',
+            label: 'Consultation Form Submitted (Simulated)',
+            timestamp: Date.now()
+          });
+          showToastAlert(`New Lead received: ${fName} ${lName}`);
+        } else {
+          // Normal Page View click event
+          db.events.push({
+            visitorId,
+            type: 'Filter_Change',
+            label: ['bridal', 'evening', 'saree', 'cocktail', 'formal'][Math.floor(Math.random() * 5)],
+            timestamp: Date.now()
+          });
+        }
+
+        saveDatabase(db);
+        loadDashboardData();
+      }, 7000); // Trigger simulated user event every 7 seconds
+    }
+
+    function stopTrafficSimulation() {
+      if (simulatorInterval) {
+        clearInterval(simulatorInterval);
+        simulatorInterval = null;
+      }
+    }
+
+    // TOAST NOTIFICATION UTILITY
+    function showToastAlert(message) {
+      const toast = document.createElement('div');
+      toast.className = 'dashboard-toast';
+      toast.innerText = '✦ ' + message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = 'all 0.4s ease';
+        setTimeout(() => {
+          toast.remove();
+        }, 400);
+      }, 3500);
+    }
+  </script>
+</body>
+
+</html>
